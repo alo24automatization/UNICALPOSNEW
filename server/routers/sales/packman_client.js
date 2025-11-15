@@ -54,6 +54,14 @@ router.post('/client/getclientssales', auth, (req, res) => {
   require('./client').getClientsSales(req, res);
 });
 
+router.get('/client/getclientTransactions', auth, (req, res) => {
+  require('./client').getClientBalanceTransactions(req, res);
+});
+
+router.post('/client/fillclientBalance', auth, (req, res) => {
+  require('./client').fillClientBalance(req, res);
+});
+
 // CRUD sale product
 router.post('/saleproducts/register', auth, (req, res) => {
   require('./saleproduct').register(req, res);
