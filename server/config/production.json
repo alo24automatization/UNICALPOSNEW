@@ -1,6 +1,6 @@
 {
-  "PORT": 8080,
-  "mongoUri": "mongodb://localhost:27017/market",
+  "PORT": 8082,
+  "mongoUri": "mongodb://localhost:27017/unicalposnew",
   "jwtSecret": "market",
-  "baseUrl": "https://stroy.stroy-system.uz"
+  "baseUrl": "https://agrokimyo.unicalpos.uz"
 }
