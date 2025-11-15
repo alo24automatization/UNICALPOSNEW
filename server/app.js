@@ -9,8 +9,7 @@ const { Server } = require('socket.io');
 const { start } = require('./connectDB/db');
 const { socketIO } = require('./socketio/socket');
 const { routers } = require('./routers/routers');
-const mongoose = require('mongoose');
-const { sendMessage, sendMessageFromMorning } = require('./routers/globalFunctions');
+const { sendMessageFromMorning } = require('./routers/globalFunctions');
 const io = new Server(server, {
   cors: {
     origin: '*',
