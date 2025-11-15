@@ -8,6 +8,7 @@ const client = new Schema(
     market: { type: Schema.Types.ObjectId, ref: 'Market', required: true, index: true },
     isArchive: { type: Boolean, default: false },
     packman: { type: Schema.Types.ObjectId, ref: 'Packman', index: true },
+    balance: { type: Number, default: 0 },
   },
   {
     timestamps: true,
