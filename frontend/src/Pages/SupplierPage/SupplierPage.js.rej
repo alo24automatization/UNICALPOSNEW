@@ -1,0 +1,23 @@
+diff a/frontend/src/Pages/SupplierPage/SupplierPage.js b/frontend/src/Pages/SupplierPage/SupplierPage.js	(rejected hunks)
+@@ -66,9 +68,18 @@ const Supplier = () => {
+     } = useSelector((state) => state.suppliers)
+ 
+     const headers = [
+-        {title: t('тДЦ'), styles: 'w-[8%] text-left'},
+-        {title: t('Yetkazuvchi'), styles: 'w-[84%] text-left'},
+-        {title: '', styles: 'w-[8%] text-left'}
++        { title: t('тДЦ'), styles: 'text-left' },
++        { title: t('Yetkazuvchi'), styles: 'text-left' },
++        {
++            title: t('Umumiy')
++        },
++        {
++            title: t('To\'langan')
++        },
++        {
++            title: t('Qarz')
++        },
++        { title: '', styles: 'text-left' }
+     ]
+ 
+     // states

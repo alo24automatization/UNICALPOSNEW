@@ -1,0 +1,10 @@
+diff a/server/config/default.json b/server/config/default.json	(rejected hunks)
+@@ -1,7 +1,7 @@
+ {
+   "PORT": 8801,
+   "mongoUriONLINE": "-",
+-  "mongoUri": "mongodb://localhost:27017/alo24",
++  "mongoUri": "mongodb://localhost:27017/market-2",
+   "jwtSecret": "market",
+   "baseUrl": "http://localhost:8801"
+ }

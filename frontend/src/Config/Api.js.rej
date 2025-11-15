@@ -1,0 +1,10 @@
+diff a/frontend/src/Config/Api.js b/frontend/src/Config/Api.js	(rejected hunks)
+@@ -3,7 +3,7 @@ import Store from '../App/store'
+ import { logOut } from '../Pages/Login/loginSlice'
+ 
+ const baseURL = process.env.REACT_APP_API_ENDPOINT
+-// const baseURL =  'http://185.241.61.68/api'
++// const baseURL = 'http://185.241.61.68/api'
+ 
+ const instance = axios.create({
+     baseURL,

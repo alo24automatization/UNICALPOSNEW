@@ -1,0 +1,734 @@
+diff --git a/frontend/src/Components/Table/Table.js b/frontend/src/Components/Table/Table.js
+index 2cc1635..94c5cb0 100644
+--- a/frontend/src/Components/Table/Table.js
++++ b/frontend/src/Components/Table/Table.js
+@@ -1,108 +1,108 @@
+-import {PackmanTableRow} from './TableRows/PackmanTableRow'
+-import {SellerTableRow} from './TableRows/SellerTableRow'
+-import {CategoryTableRow} from './TableRows/CategoryTableRow'
+-import {RegisterIncomingTableRow} from './TableRows/RegisterIncomingTableRow'
+-import {InventoriesTableRow} from './TableRows/InventoriesTableRow'
+-import {InventoryTableRow} from './TableRows/InventoryTableRow'
+-import {ProductReportTableRow} from './TableRows/ProductReportTableRow'
+-import {ProductTableRow} from './TableRows/ProductTableRow'
+-import {SupplierTableRow} from './TableRows/SupplierTableRow'
+-import {UnitTableRow} from './TableRows/UnitTableRow'
++import { PackmanTableRow } from './TableRows/PackmanTableRow'
++import { SellerTableRow } from './TableRows/SellerTableRow'
++import { CategoryTableRow } from './TableRows/CategoryTableRow'
++import { RegisterIncomingTableRow } from './TableRows/RegisterIncomingTableRow'
++import { InventoriesTableRow } from './TableRows/InventoriesTableRow'
++import { InventoryTableRow } from './TableRows/InventoryTableRow'
++import { ProductReportTableRow } from './TableRows/ProductReportTableRow'
++import { ProductTableRow } from './TableRows/ProductTableRow'
++import { SupplierTableRow } from './TableRows/SupplierTableRow'
++import { UnitTableRow } from './TableRows/UnitTableRow'
+ import Thead from './Thead'
+-import {IncomingsTableRow} from './TableRows/IncomingsTableRow'
+-import {RegisterSaleTableRow} from './TableRows/RegisterSaleTableRow'
+-import {TemporaryIncomingsTableRow} from './TableRows/TemporaryIncomingsTableRow'
+-import {TemporarySaleTableRow} from './TableRows/TemporarySaleTableRow'
+-import {SalesListTableRow} from './TableRows/SalesListTableRow'
+-import {ClientTableRow} from './TableRows/ClientTableRow'
+-import {ExchangenerateTableRow} from './TableRows/ExchangenerateTableRow'
+-import {SaleReturnTableRow} from './TableRows/SaleReturnTableRow'
+-import {CashierSaleTableRow} from './TableRows/CashierSaleTableRow'
+-import {PaymentsTableRow} from './TableRows/PaymentsTableRow'
+-import {IncomeTableRow} from './TableRows/IncomeTableRow'
+-import {DebtsTableRow} from './TableRows/DebtsTableRow'
+-import {DiscountTableRow} from './TableRows/DiscountTableRow'
+-import {ExpensesTableRow} from './TableRows/ExpensesTableRow'
+-import {BarcodeTableRow} from './TableRows/BarcodeTableRow.js'
+-import {AdminProductTableRow} from './TableRows/AdminProductTableRow'
+-import {ReturnProductsTableRow} from './TableRows/ReturnProductsTableRow.js'
+-import {GeneralReportTableRow} from './TableRows/GeneralReportTableRow.js'
+-import {RegisterSaleTableFooter} from './TableFooters/RegisterSaleTableFooter.js'
+-import {FilialShopTableRow} from './TableRows/FilialShopTableRow'
++import { IncomingsTableRow } from './TableRows/IncomingsTableRow'
++import { RegisterSaleTableRow } from './TableRows/RegisterSaleTableRow'
++import { TemporaryIncomingsTableRow } from './TableRows/TemporaryIncomingsTableRow'
++import { TemporarySaleTableRow } from './TableRows/TemporarySaleTableRow'
++import { SalesListTableRow } from './TableRows/SalesListTableRow'
++import { ClientTableRow } from './TableRows/ClientTableRow'
++import { ExchangenerateTableRow } from './TableRows/ExchangenerateTableRow'
++import { SaleReturnTableRow } from './TableRows/SaleReturnTableRow'
++import { CashierSaleTableRow } from './TableRows/CashierSaleTableRow'
++import { PaymentsTableRow } from './TableRows/PaymentsTableRow'
++import { IncomeTableRow } from './TableRows/IncomeTableRow'
++import { DebtsTableRow } from './TableRows/DebtsTableRow'
++import { DiscountTableRow } from './TableRows/DiscountTableRow'
++import { ExpensesTableRow } from './TableRows/ExpensesTableRow'
++import { BarcodeTableRow } from './TableRows/BarcodeTableRow.js'
++import { AdminProductTableRow } from './TableRows/AdminProductTableRow'
++import { ReturnProductsTableRow } from './TableRows/ReturnProductsTableRow.js'
++import { GeneralReportTableRow } from './TableRows/GeneralReportTableRow.js'
++import { RegisterSaleTableFooter } from './TableFooters/RegisterSaleTableFooter.js'
++import { FilialShopTableRow } from './TableRows/FilialShopTableRow'
+ import DailyReport from './TableRows/DailyReport.js'
+ import SupplierIncomingsTableRow from './TableRows/SupplierIncomingsTableRow'
+-import {FilialShopDataIdTableRow} from './TableRows/FilialShopDataIdTablerow'
+-import {CategoryReportTableRow} from './TableRows/CategoryReportTableRow'
+-import {MarketProductsTableRow} from './TableRows/MarketProductsTableRow'
+-import {PartnerProductsTableRow} from './TableRows/PartnerProductsTableRow'
+-import {RegisterOrdersTableRow} from './TableRows/RegisterOrdersTableRow'
+-import {OrderProductsTableRow} from './TableRows/OrderProductsTableRow'
+-import {SavedOrdersTableRow} from './TableRows/SavedOrdersTableRow.js'
+-import {RegisterIncomingOrdersTableRow} from './TableRows/RegisterIncomingOrdersTableRow.js'
+-import {IncomingOrderProductsTableRow} from './TableRows/IncomingOrderProductsTableRow.js'
+-import {ReceiveOrderProductsTableRow} from './TableRows/ReceiveOrderProductsTableRow.js'
+-import {LabelsIncome} from './TableRows/LabelsIncome'
+-import {ClientSaleTable} from './TableRows/ClientSaleTable'
++import { FilialShopDataIdTableRow } from './TableRows/FilialShopDataIdTablerow'
++import { CategoryReportTableRow } from './TableRows/CategoryReportTableRow'
++import { MarketProductsTableRow } from './TableRows/MarketProductsTableRow'
++import { PartnerProductsTableRow } from './TableRows/PartnerProductsTableRow'
++import { RegisterOrdersTableRow } from './TableRows/RegisterOrdersTableRow'
++import { OrderProductsTableRow } from './TableRows/OrderProductsTableRow'
++import { SavedOrdersTableRow } from './TableRows/SavedOrdersTableRow.js'
++import { RegisterIncomingOrdersTableRow } from './TableRows/RegisterIncomingOrdersTableRow.js'
++import { IncomingOrderProductsTableRow } from './TableRows/IncomingOrderProductsTableRow.js'
++import { ReceiveOrderProductsTableRow } from './TableRows/ReceiveOrderProductsTableRow.js'
++import { LabelsIncome } from './TableRows/LabelsIncome'
++import { ClientSaleTable } from './TableRows/ClientSaleTable'
+ import PackmanProfitClientsTableRow from './TableRows/PackmanProfitClientsTableRow.js'
+ 
+ function Table({
+     showClients,
+     changeCheckbox,
+     selectedSale,
+-                   page,
+-                   data,
+-                   headers,
+-                   currentPage,
+-                   countPage,
+-                   Sort,
+-                   Edit,
+-                   salerDebts,
+-                   Delete,
+-                   hiddenPayButton,
+-                   hiddenInfoButton,
+-                   currency,
+-                   changeHandler,
+-                   Print,
+-                   inputValue,
+-                   inputDisabled,
+-                   Excel,
+-                   editedIncoming,
+-                   saveEditIncoming,
+-                   changeNumberHandler,
+-                   sortItem,
+-                   ReturnPayment,
+-                   Save,
+-                   onKeyUp,
+-                   currencyType,
+-                   type,
+-                   Pay,
+-                   isDisabled,
+-                   reports,
+-                   onClickTableRow,
+-                   linkToSellerReports,
+-                   sellers,
+-                   addPlus,
+-                   footer,
+-                   increment,
+-                   decrement,
+-                   lowUnitpriceProducts,
+-                   linkToSupplierReport,
+-                   printedData,
+-                   productminimumpage,
+-                   handleDelete,
+-                   wholeSale,
+-                   handleShowProduct,
+-                   updatePosition,
+-                   handleCountProduct,
+-                   handleUnitPrice,
+-                   selectedFilial,
+-                   editComment,
+-                   startDate,
+-                   endDate,
+-                   modalOpen,
+-                   totalDebt,
+-                   handleClickProduct
+-               }) {
++    page,
++    data,
++    headers,
++    currentPage,
++    countPage,
++    Sort,
++    Edit,
++    salerDebts,
++    Delete,
++    hiddenPayButton,
++    hiddenInfoButton,
++    currency,
++    changeHandler,
++    Print,
++    inputValue,
++    inputDisabled,
++    Excel,
++    editedIncoming,
++    saveEditIncoming,
++    changeNumberHandler,
++    sortItem,
++    ReturnPayment,
++    Save,
++    onKeyUp,
++    currencyType,
++    type,
++    Pay,
++    isDisabled,
++    reports,
++    onClickTableRow,
++    linkToSellerReports,
++    sellers,
++    addPlus,
++    footer,
++    increment,
++    decrement,
++    lowUnitpriceProducts,
++    linkToSupplierReport,
++    printedData,
++    productminimumpage,
++    handleDelete,
++    wholeSale,
++    handleShowProduct,
++    updatePosition,
++    handleCountProduct,
++    handleUnitPrice,
++    selectedFilial,
++    editComment,
++    startDate,
++    endDate,
++    modalOpen,
++    totalDebt,
++    handleClickProduct
++}) {
+     const checkRows = () => {
+         switch (page) {
+             case 'product':
+@@ -175,6 +175,7 @@ function Table({
+                         currentPage={currentPage}
+                         countPage={countPage}
+                         Edit={Edit}
++                        currency={currency}
+                         Delete={Delete}
+                         linkToSupplierReport={linkToSupplierReport}
+                     />
+@@ -336,9 +337,9 @@ function Table({
+                         Delete={Delete}
+                     />
+                 )
+-                case "packmanProfitClients":
+-                    return (
+-                        <PackmanProfitClientsTableRow
++            case "packmanProfitClients":
++                return (
++                    <PackmanProfitClientsTableRow
+                         data={data}
+                         showClients={showClients}
+                         selectedSale={selectedSale}
+@@ -349,7 +350,7 @@ function Table({
+                         Delete={Delete}
+                         currency={currency}
+                     />
+-                    )
++                )
+             case 'seller':
+                 return (
+                     <SellerTableRow
+@@ -517,9 +518,9 @@ function Table({
+                     />
+                 )
+             case 'generalreport':
+-                return <GeneralReportTableRow data={data} currency={currency}/>
++                return <GeneralReportTableRow data={data} currency={currency} />
+             case 'dailyreport':
+-                return <DailyReport data={data}/>
++                return <DailyReport data={data} />
+             case 'incomingsupplier':
+                 return (
+                     <SupplierIncomingsTableRow
+@@ -531,7 +532,7 @@ function Table({
+                     />
+                 )
+             case 'categoryreport':
+-                return <CategoryReportTableRow data={data}/>
++                return <CategoryReportTableRow data={data} />
+             case 'marketProducts':
+                 return (
+                     <MarketProductsTableRow
+@@ -643,7 +644,7 @@ function Table({
+             className='overflow-x-auto lg:w-full  ms-3 me-3 mt-2  pb-[1.25rem]  max-h-[35rem] mb-[1rem]'
+         >
+             <thead className='rounded-t-lg sticky top-0'>
+-            <Thead headers={headers} Sort={Sort} sortItem={sortItem}/>
++                <Thead headers={headers} Sort={Sort} sortItem={sortItem} />
+             </thead>
+             <tbody>{checkRows()}</tbody>
+             {footer && <tfoot>{checkFooters()}</tfoot>}
+diff --git a/frontend/src/Components/Table/TableRows/SupplierTableRow.js b/frontend/src/Components/Table/TableRows/SupplierTableRow.js
+index aaa2533..e4fde22 100644
+--- a/frontend/src/Components/Table/TableRows/SupplierTableRow.js
++++ b/frontend/src/Components/Table/TableRows/SupplierTableRow.js
+@@ -1,12 +1,13 @@
+-import React, {useEffect, useState} from 'react'
++import React, { useEffect, useState } from 'react'
+ import TableBtn from '../../Buttons/TableBtn'
+-import {map} from 'lodash'
++import { map } from 'lodash'
+ 
+ export const SupplierTableRow = ({
+     data,
+     currentPage,
+     countPage,
+     Edit,
++    currency,
+     Delete,
+     linkToSupplierReport,
+ }) => {
+@@ -22,14 +23,42 @@ export const SupplierTableRow = ({
+             window.removeEventListener('resize', handleResize);
+         };
+     }, []);
++    const reducer = (arr, key) =>
++        arr.reduce((prev, item) => prev + item[key], 0)
++    const changeCurrency = (item, key) =>
++        currency === 'USD' ? item[key] : item[key + 'uzs']
+     return (
+         <>
+             {map(data, (supplier, index) => (
+-                !isMobile?<tr key={supplier._id} className='tr'>
++                !isMobile ? <tr key={supplier._id} className='tr'>
+                     <td className='td'>
+                         {currentPage * countPage + 1 + index}
+                     </td>
+                     <td className='td text-left'>{supplier.name}</td>
++                    <td className='td text-right font-medium text-primary-700'>
++                        {changeCurrency(supplier, 'total').toLocaleString(
++                            'ru-RU'
++                        )}{' '}
++                        {currency}
++                    </td>
++                    <td className='td text-right font-medium text-success-500'>
++                        {changeCurrency(
++                            supplier,
++                            'totalpayment'
++                        ).toLocaleString('ru-RU')}{' '}
++                        {currency}
++                    </td>
++                    <td
++                        className={`td text-right font-medium ${supplier.debt !== 0
++                            ? 'text-error-500'
++                            : 'text-black-900'
++                            }`}
++                    >
++                        {changeCurrency(supplier, 'debt').toLocaleString(
++                            'ru-RU'
++                        )}{' '}
++                        {currency}
++                    </td>
+                     <td className='py-[0.375rem] td border-r-0 text-center'>
+                         <div className='flex items-center justify-center gap-[0.625rem]'>
+                             <TableBtn
+@@ -51,28 +80,28 @@ export const SupplierTableRow = ({
+                             />
+                         </div>
+                     </td>
+-                </tr>:
+-                <li className='text-sm w-[90vw]  bg-[white] rounded-lg m-2 list-none'>
+-                    <li className='flex justify-between p-[10px] border border-b-1 border-s-0 border-t-0 border-e-0'>
+-                        <p>{currentPage * countPage + 1 + index}</p> 
+-                        <p className='text-[green]'>{supplier.name}</p>
+-                    </li>
+-                    <li className='flex justify-end p-[10px] '>
+-                    <div className='flex items-center justify-center gap-[0.625rem]'>
+-                            
+-                            <TableBtn
+-                                type={'edit'}
+-                                bgcolor='bg-warning-500'
+-                                onClick={() => Edit(supplier)}
+-                            />
+-                            <TableBtn
+-                                type={'delete'}
+-                                bgcolor='bg-error-500'
+-                                onClick={() => Delete(supplier)}
+-                            />
+-                        </div>
++                </tr> :
++                    <li className='text-sm w-[90vw]  bg-[white] rounded-lg m-2 list-none'>
++                        <li className='flex justify-between p-[10px] border border-b-1 border-s-0 border-t-0 border-e-0'>
++                            <p>{currentPage * countPage + 1 + index}</p>
++                            <p className='text-[green]'>{supplier.name}</p>
++                        </li>
++                        <li className='flex justify-end p-[10px] '>
++                            <div className='flex items-center justify-center gap-[0.625rem]'>
++
++                                <TableBtn
++                                    type={'edit'}
++                                    bgcolor='bg-warning-500'
++                                    onClick={() => Edit(supplier)}
++                                />
++                                <TableBtn
++                                    type={'delete'}
++                                    bgcolor='bg-error-500'
++                                    onClick={() => Delete(supplier)}
++                                />
++                            </div>
++                        </li>
+                     </li>
+-                </li>
+             ))}
+         </>
+     )
+diff --git a/frontend/src/Config/Api.js b/frontend/src/Config/Api.js
+index 6cdee75..1bdf8f7 100644
+--- a/frontend/src/Config/Api.js
++++ b/frontend/src/Config/Api.js
+@@ -3,7 +3,7 @@ import Store from '../App/store'
+ import { logOut } from '../Pages/Login/loginSlice'
+ 
+ const baseURL = process.env.REACT_APP_API_ENDPOINT
+-// const baseURL =  'http://185.241.61.68/api'
++// const baseURL = 'http://185.241.61.68/api'
+ 
+ const instance = axios.create({
+     baseURL,
+diff --git a/frontend/src/Pages/SupplierPage/SupplierPage.js b/frontend/src/Pages/SupplierPage/SupplierPage.js
+index 867c5e6..7df355b 100644
+--- a/frontend/src/Pages/SupplierPage/SupplierPage.js
++++ b/frontend/src/Pages/SupplierPage/SupplierPage.js
+@@ -1,13 +1,13 @@
+-import React, {useEffect, useState} from 'react'
++import React, { useEffect, useState } from 'react'
+ import FieldContainer from '../../Components/FieldContainer/FieldContainer'
+ import Button from '../../Components/Buttons/BtnAddRemove'
+ import Pagination from '../../Components/Pagination/Pagination'
+ import Table from '../../Components/Table/Table'
+ import TableMobile from '../../Components/Table/TableMobile'
+-import {useDispatch, useSelector} from 'react-redux'
++import { useDispatch, useSelector } from 'react-redux'
+ import Spinner from '../../Components/Spinner/SmallLoader.js'
+ import NotFind from '../../Components/NotFind/NotFind.js'
+-import {motion} from 'framer-motion'
++import { motion } from 'framer-motion'
+ import {
+     addSupplier,
+     clearErrorSuppliers,
+@@ -21,7 +21,7 @@ import {
+     updateSupplier
+ } from './suppliersSlice.js'
+ 
+-import {getAllSuppliers} from '../Incomings/incomingSlice.js'
++import { getAllSuppliers } from '../Incomings/incomingSlice.js'
+ import {
+     successAddSupplierMessage,
+     successDeleteSupplierMessage,
+@@ -31,11 +31,12 @@ import {
+ } from '../../Components/ToastMessages/ToastMessages.js'
+ import UniversalModal from '../../Components/Modal/UniversalModal.js'
+ import SearchForm from '../../Components/SearchForm/SearchForm.js'
+-import {checkEmptyString} from '../../App/globalFunctions.js'
+-import {useTranslation} from 'react-i18next'
+-import {filter} from 'lodash'
+-import {useNavigate} from 'react-router-dom'
++import { checkEmptyString, exportExcel } from '../../App/globalFunctions.js'
++import { useTranslation } from 'react-i18next'
++import { filter, map } from 'lodash'
++import { useNavigate } from 'react-router-dom'
+ import SelectForm from '../../Components/Select/SelectForm.js'
++import ExportBtn from '../../Components/Buttons/ExportBtn'
+ 
+ const Supplier = () => {
+     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+@@ -50,9 +51,10 @@ const Supplier = () => {
+             window.removeEventListener('resize', handleResize);
+         };
+     }, []);
+-    const {t} = useTranslation(['common'])
++    const { t } = useTranslation(['common'])
+     const dispatch = useDispatch()
+     const navigate = useNavigate()
++    const { currency, currencyType } = useSelector((state) => state.currency)
+     const {
+         errorSuppliers,
+         suppliers,
+@@ -66,9 +68,18 @@ const Supplier = () => {
+     } = useSelector((state) => state.suppliers)
+ 
+     const headers = [
+-        {title: t('тДЦ'), styles: 'w-[8%] text-left'},
+-        {title: t('Yetkazuvchi'), styles: 'w-[84%] text-left'},
+-        {title: '', styles: 'w-[8%] text-left'}
++        { title: t('тДЦ'), styles: 'text-left' },
++        { title: t('Yetkazuvchi'), styles: 'text-left' },
++        {
++            title: t('Umumiy')
++        },
++        {
++            title: t('To\'langan')
++        },
++        {
++            title: t('Qarz')
++        },
++        { title: '', styles: 'text-left' }
+     ]
+ 
+     // states
+@@ -122,7 +133,7 @@ const Supplier = () => {
+     // handle submit of inputs
+     const addNewSupplier = (e) => {
+         e.preventDefault()
+-        const {failed, message} = checkEmptyString([{
++        const { failed, message } = checkEmptyString([{
+             value: supplierName,
+             message: t('Yetkazuvchi ismi')
+         }])
+@@ -143,7 +154,7 @@ const Supplier = () => {
+ 
+     const handleEdit = (e) => {
+         e.preventDefault()
+-        const {failed, message} = checkEmptyString([{
++        const { failed, message } = checkEmptyString([{
+             value: supplierName,
+             message: t('Yetkazuvchi ismi')
+         }])
+@@ -172,7 +183,7 @@ const Supplier = () => {
+     }
+ 
+     // filter by total
+-    const filterByTotal = ({value}) => {
++    const filterByTotal = ({ value }) => {
+         setShowByTotal(value)
+         setCurrentPage(0)
+     }
+@@ -182,8 +193,8 @@ const Supplier = () => {
+         let val = e.target.value
+         let valForSearch = val.toLowerCase().replace(/\s+/g, ' ').trim()
+         setSearchByName(val)
+-        ;(searchedData.length > 0 || totalSearched > 0) &&
+-        dispatch(clearSearchedSuppliers())
++            ; (searchedData.length > 0 || totalSearched > 0) &&
++                dispatch(clearSearchedSuppliers())
+         if (valForSearch === '') {
+             setData(suppliers)
+             setFilteredDataTotal(total)
+@@ -208,6 +219,48 @@ const Supplier = () => {
+         }
+     }
+ 
++    const exportData = () => {
++        let fileName = 'Yetkazuvchilar'
++        const exportHeader = [
++            t('тДЦ'),
++            t('Yetkazuvchi'),
++            t('Umumiy'),
++            t("To'langan"),
++            t('Qarz'),
++        ]
++        const body = {
++            currentPage,
++            countPage: showByTotal,
++            search: {
++                name: searchByName.replace(/\s+/g, ' ').trim()
++            }
++        }
++        const changeCurrency = (item, key) =>
++            currencyType === 'USD' ? item[key] : item[key + 'uzs']
++        dispatch(getSuppliers(body)).then(({ error, payload }) => {
++            if (!error) {
++                if (payload?.suppliers.length > 0) {
++                    const newData = map(payload?.suppliers, (item, index) => ({
++                        nth: index + 1,
++                        supplier: item?.name || '',
++                        total: changeCurrency(item, 'total').toLocaleString(
++                            'ru-RU'
++                        ) || '',
++                        totalpayment: changeCurrency(item, 'totalpayment').toLocaleString(
++                            'ru-RU'
++                        ) || '',
++                        debt: changeCurrency(item, 'debt').toLocaleString(
++                            'ru-RU'
++                        ) || '',
++                    }))
++                    exportExcel(newData, fileName, exportHeader)
++                } else {
++                    universalToast("Jadvalda ma'lumot mavjud emas !", 'warning')
++                }
++            }
++        })
++    }
++
+     // link to next page
+     const linkToSupplierReport = (id) => {
+         navigate(`/hamkorlar/yetkazuvchilar/${id}`)
+@@ -277,10 +330,10 @@ const Supplier = () => {
+             animate='open'
+             exit='collapsed'
+             variants={{
+-                open: {opacity: 1, height: 'auto'},
+-                collapsed: {opacity: 0, height: 0}
++                open: { opacity: 1, height: 'auto' },
++                collapsed: { opacity: 0, height: 0 }
+             }}
+-            transition={{duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98]}}
++            transition={{ duration: 0.8, ease: [0.04, 0.62, 0.23, 0.98] }}
+         >
+             <UniversalModal
+                 headerText={`${deletedSupplier && deletedSupplier.name} ${t(
+@@ -296,9 +349,8 @@ const Supplier = () => {
+                 isOpen={modalVisible}
+             />
+             <form
+-                className={`flex ps-[20px] gap-[1.25rem] lg:mt-0 mt-[40px] bg-background flex-col mainPadding transition ease-linear duration-200 ${
+-                    stickyForm && 'stickyForm'
+-                }`}
++                className={`flex ps-[20px] gap-[1.25rem] lg:mt-0 mt-[40px] bg-background flex-col mainPadding transition ease-linear duration-200 ${stickyForm && 'stickyForm'
++                    }`}
+             >
+                 <div className='supplier-style'>
+                     <FieldContainer
+@@ -325,16 +377,19 @@ const Supplier = () => {
+                 </div>
+             </form>
+             <div className='flex ps-[10px] items-center '>
+-            <SelectForm  key={'total_1'}  onSelect={filterByTotal}/>
+-            <SearchForm
+-                filterByTotal={filterByTotal}
+-                filterBy={['total', 'name']}
+-                filterByName={filterByName}
+-                searchByName={searchByName}
+-                filterByCodeAndNameAndCategoryWhenPressEnter={
+-                    filterByNameWhenPressEnter
+-                }
+-            />
++                <SelectForm key={'total_1'} onSelect={filterByTotal} />
++                <SearchForm
++                    filterByTotal={filterByTotal}
++                    filterBy={['total', 'name']}
++                    filterByName={filterByName}
++                    searchByName={searchByName}
++                    filterByCodeAndNameAndCategoryWhenPressEnter={
++                        filterByNameWhenPressEnter
++                    }
++                />
++                <div className={'flex px-4 py-2 gap-2'}>
++                    <ExportBtn onClick={exportData} />
++                </div>
+             </div>
+ 
+             <div className='lg:tableContainerPadding'>
+@@ -343,29 +398,29 @@ const Supplier = () => {
+                 ) : data.length === 0 && searchedData.length === 0 ? (
+                     <NotFind text={t('Yetkazib beruvchilar mavjud emas')} />
+                 ) : (
+-                    !isMobile?
+-                    <Table
+-                        data={searchedData.length > 0 ? searchedData : data}
+-                        page={'supplier'}
+-                        currentPage={currentPage}
+-                        countPage={showByTotal}
+-                        headers={headers}
+-                        Edit={handleEditSupplier}
+-                        Delete={handleDeleteSupplier}
+-                        linkToSupplierReport={linkToSupplierReport}
+-                    />:
+-                    <TableMobile
+-                        data={searchedData.length > 0 ? searchedData : data}
+-                        page={'supplier'}
+-                        currentPage={currentPage}
+-                        countPage={showByTotal}
+-                        headers={headers}
+-                        Edit={handleEditSupplier}
+-                        Delete={handleDeleteSupplier}
+-                        linkToSupplierReport={linkToSupplierReport}
+-                    />
++                    !isMobile ?
++                        <Table
++                            data={searchedData.length > 0 ? searchedData : data}
++                            page={'supplier'}
++                            currentPage={currentPage}
++                            countPage={showByTotal}
++                            headers={headers}
++                            Edit={handleEditSupplier}
++                            Delete={handleDeleteSupplier}
++                            linkToSupplierReport={linkToSupplierReport}
++                        /> :
++                        <TableMobile
++                            data={searchedData.length > 0 ? searchedData : data}
++                            page={'supplier'}
++                            currentPage={currentPage}
++                            countPage={showByTotal}
++                            headers={headers}
++                            Edit={handleEditSupplier}
++                            Delete={handleDeleteSupplier}
++                            linkToSupplierReport={linkToSupplierReport}
++                        />
+                 )}
+-                
++
+             </div>
+             <div className='pagination-supplier flex justify-center [mb-30px] mt-[30px]'>
+                 {(filteredDataTotal !== 0 || totalSearched !== 0) && (
+diff --git a/server/config/default.json b/server/config/default.json
+index e393cea..db91191 100644
+--- a/server/config/default.json
++++ b/server/config/default.json
+@@ -1,7 +1,7 @@
+ {
+   "PORT": 8801,
+   "mongoUriONLINE": "-",
+-  "mongoUri": "mongodb://localhost:27017/alo24",
++  "mongoUri": "mongodb://localhost:27017/market-2",
+   "jwtSecret": "market",
+   "baseUrl": "http://localhost:8801"
+ }
+diff --git a/server/routers/supplier/supplier.js b/server/routers/supplier/supplier.js
+index 01d07d3..3778b78 100644
+--- a/server/routers/supplier/supplier.js
++++ b/server/routers/supplier/supplier.js
+@@ -177,9 +177,42 @@ module.exports.getSuppliers = async (req, res) => {
+       .sort({ _id: -1 })
+       .select('name market')
+       .skip(currentPage * countPage)
+-      .limit(countPage);
++      .limit(countPage)
++      .lean()
+ 
+-    res.status(201).json({ suppliers: suppliers, count: count });
++
++    const reducer = (arr, key) =>
++      arr.reduce((prev, item) => prev + (item[key] || 0), 0);
++
++    const response = []
++
++    for (const supplier of suppliers) {
++      const connectors = await IncomingConnector.find({
++        market,
++        supplier: supplier._id,
++      })
++        .select('-isArchive -updatedAt -__v')
++        .populate('supplier', 'name')
++        .populate('payments', 'totalprice totalpriceuzs payment paymentuzs')
++        .populate('incoming', 'pieces')
++        .lean()
++
++      const totalpayment = connectors.reduce((prev, item) => prev + (reducer(item.payments, 'payment') || 0), 0);
++      const totalpaymentuzs = connectors.reduce((prev, item) => prev + (reducer(item.payments, 'paymentuzs') || 0), 0);
++      const debt = reducer(connectors, 'total') - totalpayment;
++      const debtuzs = reducer(connectors, 'totaluzs') - totalpaymentuzs;
++      response.push({
++        ...supplier,
++        totalpayment,
++        totalpaymentuzs,
++        total: reducer(connectors, 'total'),
++        totaluzs: reducer(connectors, 'totaluzs'),
++        debt,
++        debtuzs
++      })
++    }
++
++    res.status(201).json({ suppliers: response, count: count });
+   } catch (error) {
+     res.status(501).json({ error: 'Serverda xatolik yuz berdi...' });
+   }
