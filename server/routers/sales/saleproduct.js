@@ -16,6 +16,7 @@ const axios = require('axios');
 const moment = require('moment');
 const { filter } = require('lodash');
 const { WarhouseProduct } = require('../../models/WarhouseProduct/WarhouseProduct');
+const { ClientBalanceTransactions } = require('../../models/Sales/ClientBalanceTransactions.js');
 
 const convertToUsd = (value) => Math.round(value * 1000) / 1000;
 const convertToUzs = (value) => Math.round(value);
@@ -51,7 +52,8 @@ const transferWarhouseProducts = async (products) => {
 module.exports.register = async (req, res) => {
   try {
     let {
-      use_balance,
+      useBalance,
+      totalAmount,
       saleproducts,
       client,
       packman,
@@ -514,6 +516,25 @@ module.exports.register = async (req, res) => {
       filteredProductsSale.length > 0
         ? filteredProductsSale.reduce((sum, item) => sum + item.totaldebtuzs, 0)
         : 0;
+
+    if (foundedClient && totalAmount > totalpriceuzs) {
+      const balance = totalAmount - totalpriceuzs;
+      foundedClient.balance = balance;
+      const transactionData = {
+        client: foundedClient._id,
+        type: 'credit',
+      };
+
+      if (payment.type === 'card') {
+        transactionData.card = balance;
+      } else if (payment.type === 'transfer') {
+        transactionData.transfer = balance;
+      } else {
+        transactionData.cash = balance;
+      }
+
+      await Promise.all([foundedClient.save(), ClientBalanceTransactions.create(transactionData)]);
+    }
 
     res.status(201).send({
       ...connector,
