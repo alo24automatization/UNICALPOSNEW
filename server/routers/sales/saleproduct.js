@@ -343,17 +343,19 @@ module.exports.register = async (req, res) => {
     if (payment.totalprice > 0) {
       const newPayment = new Payment({
         comment: payment.comment,
-        payment: convertToUsd(payment.card + payment.cash + payment.transfer),
-        paymentuzs: convertToUzs(payment.carduzs + payment.cashuzs + payment.transferuzs),
-        card: payment.card,
-        cash: payment.cash,
-        transfer: payment.transfer,
-        carduzs: payment.carduzs,
-        cashuzs: payment.cashuzs,
-        transferuzs: payment.transferuzs,
+        payment: useBalance ? 0 : convertToUsd(payment.card + payment.cash + payment.transfer),
+        paymentuzs: useBalance
+          ? 0
+          : convertToUzs(payment.carduzs + payment.cashuzs + payment.transferuzs),
+        card: useBalance ? 0 : payment.card,
+        cash: useBalance ? 0 : payment.cash,
+        transfer: useBalance ? 0 : payment.transfer,
+        carduzs: useBalance ? 0 : payment.carduzs,
+        cashuzs: useBalance ? 0 : payment.cashuzs,
+        transferuzs: useBalance ? 0 : payment.transferuzs,
         type: payment.type,
-        totalprice,
-        totalpriceuzs,
+        totalprice: useBalance ? 0 : convertToUsd(totalprice),
+        totalpriceuzs: useBalance ? 0 : convertToUzs(totalpriceuzs),
         market,
         user,
         saleconnector: saleconnector._id,
@@ -547,7 +549,7 @@ module.exports.register = async (req, res) => {
         : 0;
 
     if (foundedClient && useBalance) {
-      foundedClient.balance = -totalpriceuzs;
+      foundedClient.balance -= totalpriceuzs;
       await Promise.all([
         foundedClient.save(),
         ClientBalanceTransactions.create({
