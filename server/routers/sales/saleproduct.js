@@ -343,10 +343,8 @@ module.exports.register = async (req, res) => {
     if (payment.totalprice > 0) {
       const newPayment = new Payment({
         comment: payment.comment,
-        payment: useBalance ? 0 : convertToUsd(payment.card + payment.cash + payment.transfer),
-        paymentuzs: useBalance
-          ? 0
-          : convertToUzs(payment.carduzs + payment.cashuzs + payment.transferuzs),
+        payment: convertToUsd(payment.card + payment.cash + payment.transfer),
+        paymentuzs: convertToUzs(payment.carduzs + payment.cashuzs + payment.transferuzs),
         card: useBalance ? 0 : payment.card,
         cash: useBalance ? 0 : payment.cash,
         transfer: useBalance ? 0 : payment.transfer,
