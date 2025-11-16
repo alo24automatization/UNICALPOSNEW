@@ -107,6 +107,7 @@ function Table({
     modalOpen,
     totalDebt,
     handleClickProduct,
+    openModalBalance
 }) {
     const checkRows = () => {
         switch (page) {
@@ -345,6 +346,7 @@ function Table({
                         Edit={Edit}
                         Delete={Delete}
                         Print={Print}
+                        openModalBalance={openModalBalance}
                     />
                 )
             case 'packman':

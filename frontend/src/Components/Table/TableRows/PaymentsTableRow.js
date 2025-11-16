@@ -67,12 +67,6 @@ export const PaymentsTableRow = ({
                                 : sale?.transferuzs?.toLocaleString('ru-RU')}{' '}
                             {currency}
                         </td>
-                        <td className="text-success-500 font-bold td">
-                            0 UZS
-                        </td>
-                        <td className="text-error-500 font-bold td">
-                            0 UZS
-                        </td>
                         <td className='text-success-500 text-left td py-[0.625rem] font-bold'>
                             {!sale.totalprice ? (<>
                                 {currency === 'USD' ? (sale.cash + sale.card + sale.transfer).toLocaleString('ru-RU') : (sale.cashuzs + sale.carduzs + sale.transferuzs).toLocaleString('ru-RU')}
@@ -173,12 +167,6 @@ export const PaymentsTableRow = ({
                             : data.reduce((prev, el) => prev + el.transferuzs, 0).toLocaleString('ru-RU')
                         }{' '}
                         {currency}
-                    </td>
-                    <td className="text-error-500 font-bold td">
-                        0 UZS
-                    </td>
-                    <td className="text-success-500 font-bold td">
-                        0 UZS
                     </td>
                     <td className='p-2 td font-bold text-success-500'>{currency === 'USD' ?
                         roundUsd(payDebt).toLocaleString('ru-RU')
