@@ -16,6 +16,7 @@ const axios = require('axios');
 const moment = require('moment');
 const { filter } = require('lodash');
 const { WarhouseProduct } = require('../../models/WarhouseProduct/WarhouseProduct');
+const { ClientBalanceTransactions } = require('../../models/Sales/ClientBalanceTransactions');
 
 const convertToUsd = (value) => Math.round(value * 1000) / 1000;
 const convertToUzs = (value) => Math.round(value);
@@ -51,7 +52,7 @@ const transferWarhouseProducts = async (products) => {
 module.exports.register = async (req, res) => {
   try {
     let {
-      use_balance,
+      useBalance,
       saleproducts,
       client,
       packman,
@@ -82,12 +83,6 @@ module.exports.register = async (req, res) => {
     if (!foundedClient && client._id !== null) {
       return res.status(400).json({
         message: `Diqqat! Mijoz haqida malumotlar topilmadi!`,
-      });
-    }
-
-    if (useBalance && !foundedClient) {
-      return res.status(400).json({
-        message: `Balansdan foydalanish uchun mavjud mijoz tanlanmagan!`,
       });
     }
 
@@ -550,6 +545,19 @@ module.exports.register = async (req, res) => {
       filteredProductsSale.length > 0
         ? filteredProductsSale.reduce((sum, item) => sum + item.totaldebtuzs, 0)
         : 0;
+
+    if (foundedClient && useBalance) {
+      foundedClient.balance = -totalpriceuzs;
+      await Promise.all([
+        foundedClient.save(),
+        ClientBalanceTransactions.create({
+          client: foundedClient._id,
+          type: 'debit',
+          paymentType: 'cash',
+          amount: totalpriceuzs,
+        }),
+      ]);
+    }
 
     res.status(201).send({
       ...connector,
