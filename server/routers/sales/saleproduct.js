@@ -108,25 +108,25 @@ module.exports.register = async (req, res) => {
     let balanceUsedUzs = 0;
     let balanceUsedUsd = 0;
 
-    if (useBalance && foundedClient) {
-      const totalDueUzs = Math.max(totalpriceuzs - discountTotalUzs, 0);
-      const remainingAfterPayment = totalDueUzs - paymentTotalUzs;
-      if (remainingAfterPayment <= 0) {
-        debt.debtuzs = 0;
-        debt.debt = 0;
-      } else {
-        balanceUsedUzs = Math.min(remainingAfterPayment, foundedClient.balance || 0);
-        if (balanceUsedUzs > 0 && usdRate > 0) {
-          balanceUsedUsd = convertToUsd(balanceUsedUzs / usdRate);
-        }
-        const remainingAfterBalance = remainingAfterPayment - balanceUsedUzs;
-        debt.debtuzs = convertToUzs(remainingAfterBalance);
-        debt.debt = usdRate > 0 ? convertToUsd(remainingAfterBalance / usdRate) : 0;
-      }
-    } else {
-      debt.debtuzs = convertToUzs(Number(debt.debtuzs) || 0);
-      debt.debt = convertToUsd(Number(debt.debt) || 0);
-    }
+    // if (useBalance && foundedClient) {
+    //   const totalDueUzs = Math.max(totalpriceuzs - discountTotalUzs, 0);
+    //   const remainingAfterPayment = totalDueUzs - paymentTotalUzs;
+    //   if (remainingAfterPayment <= 0) {
+    //     debt.debtuzs = 0;
+    //     debt.debt = 0;
+    //   } else {
+    //     balanceUsedUzs = Math.min(remainingAfterPayment, foundedClient.balance || 0);
+    //     if (balanceUsedUzs > 0 && usdRate > 0) {
+    //       balanceUsedUsd = convertToUsd(balanceUsedUzs / usdRate);
+    //     }
+    //     const remainingAfterBalance = remainingAfterPayment - balanceUsedUzs;
+    //     debt.debtuzs = convertToUzs(remainingAfterBalance);
+    //     debt.debt = usdRate > 0 ? convertToUsd(remainingAfterBalance / usdRate) : 0;
+    //   }
+    // } else {
+    //   debt.debtuzs = convertToUzs(Number(debt.debtuzs) || 0);
+    //   debt.debt = convertToUsd(Number(debt.debt) || 0);
+    // }
 
     if (checkPayments(totalprice, payment, discount, debt, balanceUsedUsd)) {
       return res.status(400).json({
