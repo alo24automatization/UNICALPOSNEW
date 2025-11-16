@@ -336,7 +336,7 @@ module.exports.getClients = async (req, res) => {
         packman,
       })
         .sort({ _id: -1 })
-        .select('name market packman phoneNumber')
+        .select('name market balance packman phoneNumber')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -351,7 +351,7 @@ module.exports.getClients = async (req, res) => {
         phoneNumber: phone,
       })
         .sort({ _id: -1 })
-        .select('name market phoneNumber packman')
+        .select('name market balance phoneNumber packman')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -366,7 +366,7 @@ module.exports.getClients = async (req, res) => {
         name,
       })
         .sort({ _id: -1 })
-        .select('name market phoneNumber packman')
+        .select('name market balance phoneNumber packman')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -383,7 +383,7 @@ module.exports.getClients = async (req, res) => {
         packman,
       })
         .sort({ _id: -1 })
-        .select('name market phoneNumber packman')
+        .select('name market balance phoneNumber packman')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -400,7 +400,7 @@ module.exports.getClients = async (req, res) => {
         packman,
       })
         .sort({ _id: -1 })
-        .select('name market phoneNumber packman')
+        .select('name market balance phoneNumber packman')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -417,7 +417,7 @@ module.exports.getClients = async (req, res) => {
         phoneNumber: phone,
       })
         .sort({ _id: -1 })
-        .select('name market phoneNumber packman')
+        .select('name market balance phoneNumber packman')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -430,7 +430,7 @@ module.exports.getClients = async (req, res) => {
         market,
       })
         .sort({ _id: -1 })
-        .select('name market phoneNumber packman')
+        .select('name market balance phoneNumber packman')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -536,6 +536,7 @@ module.exports.getClients = async (req, res) => {
         name: client.name,
         market: client.market,
         packman: client.packman,
+        balance: client.balance,
         saleconnector: s,
         phoneNumber: client.phoneNumber,
       };
