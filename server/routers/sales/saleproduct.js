@@ -16,7 +16,6 @@ const axios = require('axios');
 const moment = require('moment');
 const { filter } = require('lodash');
 const { WarhouseProduct } = require('../../models/WarhouseProduct/WarhouseProduct');
-const { ClientBalanceTransactions } = require('../../models/Sales/ClientBalanceTransactions.js');
 
 const convertToUsd = (value) => Math.round(value * 1000) / 1000;
 const convertToUzs = (value) => Math.round(value);
@@ -52,8 +51,7 @@ const transferWarhouseProducts = async (products) => {
 module.exports.register = async (req, res) => {
   try {
     let {
-      useBalance,
-      totalAmount,
+      use_balance,
       saleproducts,
       client,
       packman,
@@ -552,49 +550,6 @@ module.exports.register = async (req, res) => {
       filteredProductsSale.length > 0
         ? filteredProductsSale.reduce((sum, item) => sum + item.totaldebtuzs, 0)
         : 0;
-
-    if (foundedClient) {
-      const numericTotalAmount = Number(totalAmount) || 0;
-      const clientBalanceTransactions = [];
-      let updatedBalance = foundedClient.balance || 0;
-      let hasBalanceChange = false;
-
-      if (useBalance && balanceUsedUzs > 0) {
-        updatedBalance = Math.max(updatedBalance - balanceUsedUzs, 0);
-        clientBalanceTransactions.push(
-          ClientBalanceTransactions.create({
-            client: foundedClient._id,
-            type: 'debit',
-            cash: balanceUsedUzs,
-          }),
-        );
-        hasBalanceChange = true;
-      }
-
-      if (numericTotalAmount > totalpriceuzs) {
-        const balance = numericTotalAmount - totalpriceuzs;
-        updatedBalance += balance;
-        const transactionData = {
-          client: foundedClient._id,
-          type: 'credit',
-        };
-
-        if (payment.type === 'card') {
-          transactionData.card = balance;
-        } else if (payment.type === 'transfer') {
-          transactionData.transfer = balance;
-        } else {
-          transactionData.cash = balance;
-        }
-        clientBalanceTransactions.push(ClientBalanceTransactions.create(transactionData));
-        hasBalanceChange = true;
-      }
-
-      if (hasBalanceChange) {
-        foundedClient.balance = updatedBalance;
-        await Promise.all([foundedClient.save(), ...clientBalanceTransactions]);
-      }
-    }
 
     res.status(201).send({
       ...connector,
