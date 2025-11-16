@@ -87,6 +87,12 @@ module.exports.register = async (req, res) => {
       });
     }
 
+    if (useBalance && !foundedClient) {
+      return res.status(400).json({
+        message: `Balansdan foydalanish uchun mavjud mijoz tanlanmagan!`,
+      });
+    }
+
     const totalprice = convertToUsd(
       saleproducts.reduce((summ, saleproduct) => {
         return summ + saleproduct.totalprice;
@@ -99,7 +105,37 @@ module.exports.register = async (req, res) => {
       }, 0),
     );
 
-    if (checkPayments(totalprice, payment, discount, debt)) {
+    const paymentCashUzs = Number(payment.cashuzs) || 0;
+    const paymentCardUzs = Number(payment.carduzs) || 0;
+    const paymentTransferUzs = Number(payment.transferuzs) || 0;
+    const paymentTotalUzs = paymentCashUzs + paymentCardUzs + paymentTransferUzs;
+    const discountTotalUzs = Number(discount.discountuzs) || 0;
+    const usdRate = totalprice > 0 ? totalpriceuzs / totalprice : 0;
+
+    let balanceUsedUzs = 0;
+    let balanceUsedUsd = 0;
+
+    if (useBalance && foundedClient) {
+      const totalDueUzs = Math.max(totalpriceuzs - discountTotalUzs, 0);
+      const remainingAfterPayment = totalDueUzs - paymentTotalUzs;
+      if (remainingAfterPayment <= 0) {
+        debt.debtuzs = 0;
+        debt.debt = 0;
+      } else {
+        balanceUsedUzs = Math.min(remainingAfterPayment, foundedClient.balance || 0);
+        if (balanceUsedUzs > 0 && usdRate > 0) {
+          balanceUsedUsd = convertToUsd(balanceUsedUzs / usdRate);
+        }
+        const remainingAfterBalance = remainingAfterPayment - balanceUsedUzs;
+        debt.debtuzs = convertToUzs(remainingAfterBalance);
+        debt.debt = usdRate > 0 ? convertToUsd(remainingAfterBalance / usdRate) : 0;
+      }
+    } else {
+      debt.debtuzs = convertToUzs(Number(debt.debtuzs) || 0);
+      debt.debt = convertToUsd(Number(debt.debt) || 0);
+    }
+
+    if (checkPayments(totalprice, payment, discount, debt, balanceUsedUsd)) {
       return res.status(400).json({
         message: `Diqqat! To'lov hisobida xatolik yuz bergan!`,
       });
@@ -517,23 +553,47 @@ module.exports.register = async (req, res) => {
         ? filteredProductsSale.reduce((sum, item) => sum + item.totaldebtuzs, 0)
         : 0;
 
-    if (foundedClient && totalAmount > totalpriceuzs) {
-      const balance = totalAmount - totalpriceuzs;
-      foundedClient.balance = balance;
-      const transactionData = {
-        client: foundedClient._id,
-        type: 'credit',
-      };
+    if (foundedClient) {
+      const numericTotalAmount = Number(totalAmount) || 0;
+      const clientBalanceTransactions = [];
+      let updatedBalance = foundedClient.balance || 0;
+      let hasBalanceChange = false;
 
-      if (payment.type === 'card') {
-        transactionData.card = balance;
-      } else if (payment.type === 'transfer') {
-        transactionData.transfer = balance;
-      } else {
-        transactionData.cash = balance;
+      if (useBalance && balanceUsedUzs > 0) {
+        updatedBalance = Math.max(updatedBalance - balanceUsedUzs, 0);
+        clientBalanceTransactions.push(
+          ClientBalanceTransactions.create({
+            client: foundedClient._id,
+            type: 'debit',
+            cash: balanceUsedUzs,
+          }),
+        );
+        hasBalanceChange = true;
       }
 
-      await Promise.all([foundedClient.save(), ClientBalanceTransactions.create(transactionData)]);
+      if (numericTotalAmount > totalpriceuzs) {
+        const balance = numericTotalAmount - totalpriceuzs;
+        updatedBalance += balance;
+        const transactionData = {
+          client: foundedClient._id,
+          type: 'credit',
+        };
+
+        if (payment.type === 'card') {
+          transactionData.card = balance;
+        } else if (payment.type === 'transfer') {
+          transactionData.transfer = balance;
+        } else {
+          transactionData.cash = balance;
+        }
+        clientBalanceTransactions.push(ClientBalanceTransactions.create(transactionData));
+        hasBalanceChange = true;
+      }
+
+      if (hasBalanceChange) {
+        foundedClient.balance = updatedBalance;
+        await Promise.all([foundedClient.save(), ...clientBalanceTransactions]);
+      }
     }
 
     res.status(201).send({
