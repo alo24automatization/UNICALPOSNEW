@@ -129,6 +129,7 @@ const RegisterSelling = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [payEndDate, setPayEndDate] = useState('');
   const [showPayEndDate, setShowPayEndDate] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [selectedFilial, setSelectedFilial] = useState({
     label: market?.name,
     value: market?._id,
@@ -416,7 +417,7 @@ const RegisterSelling = () => {
     }
   };
 
-  const writePayment = (value, type) => {
+  const writePayment = (value, type, checkedBalans) => {
     const maxSum = Math.abs(allPayment) - Number(paymentDiscount);
     const maxSumUzs = Math.abs(allPaymentUzs) - Number(paymentDiscountUzs);
     if (currencyType === 'USD') {
@@ -429,7 +430,7 @@ const RegisterSelling = () => {
           Number(UsdToUzs(value, exchangerate)) +
           Number(paymentCardUzs) +
           Number(paymentTransferUzs);
-        // if (all <= maxSum) {
+        if (all <= maxSum) {
           setPaymentCash(value);
           setPaymentCashUzs(UsdToUzs(value, exchangerate));
           setShowPayEndDate(
@@ -440,9 +441,9 @@ const RegisterSelling = () => {
           setPaymentDebtUzs(convertToUzs(maxSumUzs - allUzs));
           setPaid(all);
           setPaidUzs(allUzs);
-        // } else {
-        //   warningMorePayment();
-        // }
+        } else {
+          warningMorePayment();
+        }
       } else if (type === 'card') {
         const all =
           Number(value) +
@@ -508,8 +509,6 @@ const RegisterSelling = () => {
           );
           setPaymentDebt(convertToUsd(maxSum - allUsd));
           setPaymentDebtUzs(convertToUzs(maxSumUzs - all));
-          console.log(allUsd);
-          console.log(all);
           setPaid(allUsd);
           setPaidUzs(all);
         } else {
@@ -616,8 +615,8 @@ const RegisterSelling = () => {
     setPaidUzs(0);
   };
 
-  const handleChangePaymentInput = (value, key) => {
-    writePayment(value, key);
+  const handleChangePaymentInput = (value, key, checkedBalans) => {
+    writePayment(value, key, checkedBalans);
   };
 
   const handleClickDiscountBtn = () => {
@@ -703,6 +702,7 @@ const RegisterSelling = () => {
         value: client._id,
         label: client.name,
         saleconnectorid: client?.saleconnectorid || null,
+        balans: client?.balance,
       })),
     ]);
     setUserValue('');
@@ -725,11 +725,11 @@ const RegisterSelling = () => {
     });
   };
 
-  const handleClickPay = () => {
+  const handleClickPay = (checkedBalans) => {
     if (returnProducts.length) {
-      handleApproveReturn();
+      handleApproveReturn(checkedBalans);
     } else {
-      handleApprovePay();
+      handleApprovePay(checkedBalans);
     }
   };
 
@@ -747,7 +747,7 @@ const RegisterSelling = () => {
   };
 
   const [clickdelay, setClickDelay] = useState(false);
-  const handleApprovePay = () => {
+  const handleApprovePay = (checkedBalans) => {
     handleClosePay();
     const body = {
       saleproducts: map(tableProducts, (product) => {
@@ -779,6 +779,7 @@ const RegisterSelling = () => {
         name: clientValue ? clientValue.label : userValue,
         packman: clientValue?.packman,
         phoneNumber,
+        balans: clientValue?.balans || null,
       },
       packman: packmanValue
         ? {
@@ -814,6 +815,7 @@ const RegisterSelling = () => {
       user: userId ? userId : user._id,
       saleconnectorid: saleConnectorId,
       comment: saleComment,
+      useBalance: checkedBalans
     };
     if (body.debt?.debtuzs > 0 && !body?.client?.name) {
       return warningDebtClient();
@@ -857,7 +859,7 @@ const RegisterSelling = () => {
     );
   };
 
-  const handleApproveReturn = () => {
+  const handleApproveReturn = (checkedBalans) => {
     setClickDelay(true);
     handleClosePay();
     const body = {
@@ -897,8 +899,8 @@ const RegisterSelling = () => {
       user: user._id,
       saleconnectorid: saleConnectorId,
       comment: saleComment,
+      useBalance: checkedBalans
     };
-    console.log(body);
     // return
     dispatch(returnSaleProducts(body)).then(({ payload, error }) => {
       if (!error) {
@@ -1099,6 +1101,7 @@ const RegisterSelling = () => {
           value: client._id,
           packman: pack,
           saleconnectorid: client?.saleconnectorid || null,
+          balans: client?.balance,
         })),
       );
     } else {
@@ -1112,6 +1115,7 @@ const RegisterSelling = () => {
           value: client._id,
           packman: client?.packman,
           saleconnectorid: client?.saleconnectorid || null,
+          balans: client?.balance,
         })),
       ]);
     }
@@ -1737,6 +1741,7 @@ const RegisterSelling = () => {
         value: client._id,
         label: client.name,
         saleconnectorid: client?.saleconnectorid || null,
+        balans: client?.balance,
       })),
     ]);
   }, [clients, t]);
@@ -2498,6 +2503,7 @@ const RegisterSelling = () => {
         changePaymentType={handleChangePaymentType}
         onChange={handleChangePaymentInput}
         client={userValue || clientValue.label || packmanValue.label}
+        balans={clientValue.balans}
         allPayment={currencyType === 'USD' ? allPayment : allPaymentUzs}
         card={currencyType === 'USD' ? paymentCard : paymentCardUzs}
         cash={currencyType === 'USD' ? paymentCash : paymentCashUzs}

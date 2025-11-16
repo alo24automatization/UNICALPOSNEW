@@ -100,6 +100,18 @@ export const payClientSalesDebt = createAsyncThunk(
     }
 )
 
+export const addBalance = createAsyncThunk(
+    'clients/addBalance',
+    async (body, {rejectWithValue}) => {
+        try {
+            const {data} = await Api.post('/sales/client/fillclientBalance', body)
+            return data
+        } catch (error) {
+            return rejectWithValue(error)
+        }
+    }
+)
+
 const clientsSlice = createSlice({
     name: 'clients',
     initialState: {

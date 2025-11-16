@@ -6,6 +6,8 @@ import PaymentInput from './PaymentInput/PaymentInput.js'
 import { t } from 'i18next'
 import { useLocation } from 'react-router-dom'
 import Dates from '../Dates/Dates.js'
+import Checkbox from '../Checkbox/Checkbox.js'
+import { useEffect, useState } from 'react'
 
 function CustomerPayment({
     returned,
@@ -26,6 +28,7 @@ function CustomerPayment({
     allPayment,
     paid = 0,
     client = '',
+    balans,
     onChange,
     onClose,
     changePaymentType,
@@ -41,6 +44,13 @@ function CustomerPayment({
     disablePayButton,
 }) {
     const location = useLocation()
+    const [checkedBalans, setCheckedBalans] = useState(false)
+
+    useEffect(() => {
+        if (active) {
+            setCheckedBalans(false)
+        }
+    }, [active])
     const defineLabel = () => {
         switch (type) {
             case 'card':
@@ -49,7 +59,7 @@ function CustomerPayment({
                         value={card}
                         key={'sale-card1'}
                         keyInput={type}
-                        onChange={onChange}
+                        onChange={(value, keyInput) => onChange(value, keyInput, checkedBalans)}
                         onClose={onClose}
                         disabled={disableInputsCashCard}
                         label={t('Plastik')}
@@ -61,7 +71,7 @@ function CustomerPayment({
                         value={transfer}
                         key={'sale-transfer'}
                         keyInput={type}
-                        onChange={onChange}
+                        onChange={(value, keyInput) => onChange(value, keyInput, checkedBalans)}
                         onClose={onClose}
                         disabled={disableInputsCashCard}
                         label={t('O`tkazma')}
@@ -81,7 +91,7 @@ function CustomerPayment({
                         value={obj.value}
                         key={`sale-${obj.key}`}
                         keyInput={obj.key}
-                        onChange={onChange}
+                        onChange={(value, keyInput) => onChange(value, keyInput, checkedBalans)}
                         onClose={onClose}
                         label={t(obj.label)}
                     />
@@ -92,7 +102,7 @@ function CustomerPayment({
                         key={'sale-cash'}
                         disabled={disableInputsCashCard}
                         value={cash}
-                        onChange={onChange}
+                        onChange={(value, keyInput) => onChange(value, keyInput, checkedBalans)}
                         keyInput={type}
                         onClose={onClose}
                         label={t('Naqd')}
@@ -100,6 +110,13 @@ function CustomerPayment({
                 )
         }
     }
+
+    useEffect(() => {
+        if (checkedBalans && balans < allPayment) {
+            onChange(balans, type)
+        }
+    }, [checkedBalans]);
+    
     const { currencyType } = useSelector((state) => state.currency)
     return (
         <section
@@ -184,7 +201,7 @@ function CustomerPayment({
                             <span className='custom-payment-text-style'>
                                 {allPayment < 0
                                     ? t('Qaytarilayotgan')
-                                    : t('To`lanayotgan')}{' '}
+                                    : checkedBalans ? t('Balansdan') : t('To`lanayotgan')}{' '}
                                 :{' '}
                             </span>
                             <h3 className='text-[1rem] text-loginButton'>
@@ -204,12 +221,25 @@ function CustomerPayment({
                     </ul>
                 </div>
                 <div className='bottom-payment w-full flex flex-col gap-[1.25rem] border-t-[1px] border-black-200 pt-[1.25rem]'>
-                    {/* <SaleBtn
-                        text={`Balans 9 000 000`}
-                        active={type === 'balans'}
-                        onClick={changePaymentType}
-                        type='balans'
-                    /> */}
+                    {client && (
+                        <div className="flex items-start gap-[10px]">
+                            <div className="flex items-center justify-center">
+                                <Checkbox 
+                                    id="balans" 
+                                    type="checkbox" 
+                                    value={checkedBalans} onChange={() => 
+                                        setCheckedBalans((prevState) => !prevState)
+                                    }
+                                />
+                            </div>
+                            <div>
+                                <div className="text-[20px] font-bold mb-1">{t('Balans')}:</div>
+                                <div>
+                                    {(balans ?? 0).toLocaleString('ru-Ru')} {currencyType}
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     <div className='custom-paymet-btn'>
                         <SaleBtn
                             text={t(`Naqd`)}
@@ -258,7 +288,7 @@ function CustomerPayment({
                         loading={clickdelay}
                         onClick={
                             !clickdelay
-                                ? handleClickPay
+                                ? () => handleClickPay(checkedBalans)
                                 : () => console.log('wait')
                         }
                     // onDoubleClick={onDoubleClick}

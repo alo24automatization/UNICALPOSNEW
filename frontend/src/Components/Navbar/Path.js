@@ -216,6 +216,13 @@ const navListForDirector = [
         path: 'valyuta',
         submenu: false,
     },
+    // {
+    //     id: 7,
+    //     label: 'Haqdorlar hisobi',
+    //     icon: <IoCart size={'1.5rem'} />,
+    //     path: 'balance',
+    //     submenu: false,
+    // },
 ]
 export const navListForSeller = [
     {
