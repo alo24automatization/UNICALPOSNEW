@@ -16,7 +16,7 @@ const axios = require('axios');
 const moment = require('moment');
 const { filter } = require('lodash');
 const { WarhouseProduct } = require('../../models/WarhouseProduct/WarhouseProduct');
-const { ClientBalanceTransactions } = require('../../models/Sales/ClientBalanceTransactions.js');
+const { ClientBalanceTransactions } = require('../../models/Sales/ClientBalanceTransactions');
 
 const convertToUsd = (value) => Math.round(value * 1000) / 1000;
 const convertToUzs = (value) => Math.round(value);
@@ -53,7 +53,6 @@ module.exports.register = async (req, res) => {
   try {
     let {
       useBalance,
-      totalAmount,
       saleproducts,
       client,
       packman,
@@ -84,12 +83,6 @@ module.exports.register = async (req, res) => {
     if (!foundedClient && client._id !== null) {
       return res.status(400).json({
         message: `Diqqat! Mijoz haqida malumotlar topilmadi!`,
-      });
-    }
-
-    if (useBalance && !foundedClient) {
-      return res.status(400).json({
-        message: `Balansdan foydalanish uchun mavjud mijoz tanlanmagan!`,
       });
     }
 
@@ -553,47 +546,17 @@ module.exports.register = async (req, res) => {
         ? filteredProductsSale.reduce((sum, item) => sum + item.totaldebtuzs, 0)
         : 0;
 
-    if (foundedClient) {
-      const numericTotalAmount = Number(totalAmount) || 0;
-      const clientBalanceTransactions = [];
-      let updatedBalance = foundedClient.balance || 0;
-      let hasBalanceChange = false;
-
-      if (useBalance && balanceUsedUzs > 0) {
-        updatedBalance = Math.max(updatedBalance - balanceUsedUzs, 0);
-        clientBalanceTransactions.push(
-          ClientBalanceTransactions.create({
-            client: foundedClient._id,
-            type: 'debit',
-            cash: balanceUsedUzs,
-          }),
-        );
-        hasBalanceChange = true;
-      }
-
-      if (numericTotalAmount > totalpriceuzs) {
-        const balance = numericTotalAmount - totalpriceuzs;
-        updatedBalance += balance;
-        const transactionData = {
+    if (foundedClient && useBalance) {
+      foundedClient.balance = -totalpriceuzs;
+      await Promise.all([
+        foundedClient.save(),
+        ClientBalanceTransactions.create({
           client: foundedClient._id,
-          type: 'credit',
-        };
-
-        if (payment.type === 'card') {
-          transactionData.card = balance;
-        } else if (payment.type === 'transfer') {
-          transactionData.transfer = balance;
-        } else {
-          transactionData.cash = balance;
-        }
-        clientBalanceTransactions.push(ClientBalanceTransactions.create(transactionData));
-        hasBalanceChange = true;
-      }
-
-      if (hasBalanceChange) {
-        foundedClient.balance = updatedBalance;
-        await Promise.all([foundedClient.save(), ...clientBalanceTransactions]);
-      }
+          type: 'debit',
+          paymentType: 'cash',
+          amount: totalpriceuzs,
+        }),
+      ]);
     }
 
     res.status(201).send({

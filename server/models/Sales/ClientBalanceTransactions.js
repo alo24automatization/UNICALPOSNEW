@@ -4,9 +4,8 @@ const clientBalanceTransactions = new Schema(
   {
     client: { type: Schema.Types.ObjectId, ref: 'Client', required: true },
     type: { type: String, required: true, enum: ['credit', 'debit'] },
-    cash: { type: Number, default: 0 },
-    card: { type: Number, default: 0 },
-    transfer: { type: Number, default: 0 },
+    paymentType: { type: String, required: true, enum: ['cash', 'card', 'transfer'] },
+    amount: { type: Number, required: true },
   },
   {
     timestamps: true,
@@ -14,4 +13,7 @@ const clientBalanceTransactions = new Schema(
   },
 );
 
-module.exports.ClientBalanceTransactions = model('ClientBalanceTransactions', clientBalanceTransactions);
+module.exports.ClientBalanceTransactions = model(
+  'ClientBalanceTransactions',
+  clientBalanceTransactions,
+);

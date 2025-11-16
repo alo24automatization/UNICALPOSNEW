@@ -633,11 +633,15 @@ module.exports.getClientsSales = async (req, res) => {
 //* ------------------------------- CLIENT BALANCE -------------------------------
 module.exports.getClientBalanceTransactions = async (req, res) => {
   try {
-    const { page = 1, limit = 20, from, to, search } = req.query;
+    const { page = 1, limit = 20, from, to, search, market } = req.query;
     const pageNumber = Math.max(parseInt(page, 10) || 1, 1);
     const limitNumber = Math.max(parseInt(limit, 10) || 20, 1);
-    const filter = {};
+    const filter = { client: {} };
     const createdAt = {};
+
+    if (market) {
+      filter.client.market = market;
+    }
 
     if (from) {
       const fromDate = new Date(from);
@@ -672,7 +676,7 @@ module.exports.getClientBalanceTransactions = async (req, res) => {
         });
       }
 
-      filter.client = { $in: matchedClients.map((client) => client._id) };
+      filter.client.$in = matchedClients.map((client) => client._id);
     }
 
     const [clientBalanceTransactions, count] = await Promise.all([
@@ -680,8 +684,7 @@ module.exports.getClientBalanceTransactions = async (req, res) => {
         .sort({ createdAt: -1 })
         .skip((pageNumber - 1) * limitNumber)
         .limit(limitNumber)
-        .populate('client', 'name phoneNumber')
-        .populate('user', 'firstname lastname'),
+        .populate('client', 'name phoneNumber balance'),
       ClientBalanceTransactions.countDocuments(filter),
     ]);
 
@@ -701,46 +704,42 @@ module.exports.getClientBalanceTransactions = async (req, res) => {
 
 module.exports.fillClientBalance = async (req, res) => {
   try {
-    const { clientId, cash = 0, card = 0, transfer = 0 } = req.body;
-    
+    const { clientId, paymentType, amount } = req.body;
+
     if (!clientId) {
       return res.status(400).json({ message: 'Mijoz tanlanmagan.' });
     }
 
+    if (!['cash', 'card', 'transfer'].includes(paymentType)) {
+      return res.status(400).json({ message: 'To`lov turi tanlanmagan.' });
+    }
+
     const client = await Client.findById(clientId);
-    
+
     if (!client) {
       return res.status(404).json({ message: 'Mijoz topilmadi.' });
     }
 
-    const numericCash = Number(cash) || 0;
-    const numericCard = Number(card) || 0;
-    const numericTransfer = Number(transfer) || 0;
+    const numericAmount = Number(amount) || 0;
 
-    if ([numericCash, numericCard, numericTransfer].some((value) => value < 0)) {
+    if (numericAmount < 0) {
       return res.status(400).json({ message: "Qiymatlar manfiy bo'lishi mumkin emas." });
     }
 
-    const totalAmount = numericCash + numericCard + numericTransfer;
-    if (!totalAmount) {
-      return res.status(400).json({ message: "Balansni to'ldirish uchun summa kiritilmadi." });
-    }
-
-    client.balance += totalAmount;
-    await client.save();
-
-    const transaction = await ClientBalanceTransactions.create({
-      client: client._id,
-      type: 'credit',
-      cash: numericCash,
-      card: numericCard,
-      transfer: numericTransfer,
-    });
+    client.balance += numericAmount;
+    await Promise.all([
+      client.save(),
+      ClientBalanceTransactions.create({
+        paymentType,
+        client: client._id,
+        type: 'credit',
+        amount: numericAmount,
+      }),
+    ]);
 
     res.status(201).json({
       message: "Mijoz balansi muvaffaqiyatli to'ldirildi.",
       client: { _id: client._id, name: client.name, balance: client.balance },
-      transaction,
     });
   } catch (error) {
     console.log(error);
