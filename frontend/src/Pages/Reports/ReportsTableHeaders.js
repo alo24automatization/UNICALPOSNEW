@@ -204,12 +204,6 @@ export const ReportsTableHeaders = (header) => {
                 title: t("O'tkazma"),
             },
             {
-                title: t("Balansga"),
-            },
-            {
-                title: t("Balansdan"),
-            },
-            {
                 title: t("Qarzdan to'lov"),
             },
             {

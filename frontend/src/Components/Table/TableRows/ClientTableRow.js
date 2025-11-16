@@ -15,6 +15,7 @@ export const ClientTableRow = ({
     Delete,
     Print,
     type,
+    openModalBalance
 }) => {
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
     useEffect(() => {
@@ -79,14 +80,17 @@ export const ClientTableRow = ({
                                 {currencyType}
                             </td>
                         )}
-                        <td className='text-left td'>0 UZS</td>
+                        <td className='text-left td'>
+                            {client?.balance} {' '}
+                            {currencyType}
+                        </td>
                         <td className='text-left td'>0 UZS</td>
                         <td className='border-r-0 td py-[0.375rem]'>
                             <div className='flex items-center justify-center gap-[0.625rem]'>
                                 <TableBtn
                                     type={'add'}
                                     bgcolor={'bg-blue-600'}
-                                    // onClick={() => linkToSale(client._id)}
+                                    onClick={() => openModalBalance(client._id)}
                                 />
                                 <TableBtn
                                     type={'print'}
@@ -185,6 +189,11 @@ export const ClientTableRow = ({
                             <p>
                                 <div className='flex items-center justify-center gap-[0.625rem]'>
                                     <TableBtn
+                                        type={'add'}
+                                        bgcolor={'bg-blue-600 w-[35vw]'}
+                                        onClick={() => linkToSale(client.name)}
+                                    />
+                                    <TableBtn
                                         type={'edit'}
                                         bgcolor={'bg-warning-500 w-[35vw]'}
                                         onClick={() => linkToSale(client.name)}
@@ -253,7 +262,9 @@ export const ClientTableRow = ({
                         {currencyType}
                     </td>
                 )}
-                <td className='text-left td'>0 UZS</td>
+                <td className='text-left td font-bold'>
+                    {[...data].reduce((prev, el) => prev + (el.balance || 0), 0).toLocaleString('ru-RU')} {currencyType}
+                </td>
                 <td className='text-left td'>0 UZS</td>
                 <td className='border-r-0 td py-[0.375rem]'></td>
             </tr>

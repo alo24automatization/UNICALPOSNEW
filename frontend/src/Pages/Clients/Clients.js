@@ -31,6 +31,7 @@ import { useTranslation } from 'react-i18next'
 import { VscChromeClose } from 'react-icons/vsc'
 import { FaFilter } from 'react-icons/fa'
 import SelectForm from '../../Components/Select/SelectForm.js'
+import BalanceModal from '../../Components/BalanceModal/BalanceModal.js'
 
 const ClientsPage = () => {
     const { t } = useTranslation(['common'])
@@ -96,6 +97,8 @@ const ClientsPage = () => {
     const [printedSelling, setPrintedSelling] = useState(null)
     const [modalBody, setModalBody] = useState(null)
     const [modalOpen, setModalOpen] = useState(false)
+    const [isOpenBalanceModal, setIsOpenBalanceModal] = useState(false)
+    const [clientId, setClientId] = useState(null)
     // modal toggle
     const toggleModal = () => {
         setModalVisible(!modalVisible)
@@ -318,6 +321,15 @@ const ClientsPage = () => {
         setPackman(e)
     }
 
+    const openModalBalanceHandler = (clientRowId) => {
+        setIsOpenBalanceModal(true)
+        setClientId(clientRowId)
+    }
+
+    const closeModalBalanceHandler = () => {
+        setIsOpenBalanceModal(false)
+    }
+
     useEffect(() => {
         dispatch(getAllPackmans())
     }, [dispatch])
@@ -375,6 +387,11 @@ const ClientsPage = () => {
                 approveFunction={handleClickApproveToDelete}
                 isOpen={modalVisible}
                 printedSelling={printedSelling}
+            />
+            <BalanceModal 
+                isOpen={isOpenBalanceModal}
+                clientId={clientId}
+                onCloseModal={closeModalBalanceHandler}
             />
             <form
                 className={`flex ps-[20px] mt-[40px] gap-[1.25rem] bg-background flex-col mainPadding transition ease-linear duration-200 ${stickyForm && 'stickyForm'
@@ -543,6 +560,7 @@ const ClientsPage = () => {
                         Delete={handleDeleteClient}
                         Print={handlePrint}
                         type={user.type}
+                        openModalBalance={openModalBalanceHandler}
                     />
                 ) : (
                     <TableMobile
