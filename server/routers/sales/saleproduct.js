@@ -547,14 +547,21 @@ module.exports.register = async (req, res) => {
         : 0;
 
     if (foundedClient && useBalance) {
-      foundedClient.balance -= totalpriceuzs;
+      let total = totalpriceuzs;
+      if (foundedClient.balance - total >= 0) {
+        foundedClient.balance -= total;
+      }else{
+        total = foundedClient.balance;
+        foundedClient.balance = 0;
+      }
+      
       await Promise.all([
         foundedClient.save(),
         ClientBalanceTransactions.create({
           client: foundedClient._id,
           type: 'debit',
           paymentType: 'cash',
-          amount: totalpriceuzs,
+          amount: total,
         }),
       ]);
     }
