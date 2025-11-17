@@ -9,6 +9,7 @@ const client = new Schema(
     isArchive: { type: Boolean, default: false },
     packman: { type: Schema.Types.ObjectId, ref: 'Packman', index: true },
     balance: { type: Number, default: 0 },
+    debtLimit: { type: Number, default: 0 },
   },
   {
     timestamps: true,
@@ -30,6 +31,7 @@ function validateClient(client) {
     name: Joi.string().required(),
     phoneNumber: Joi.string().required(),
     market: Joi.string().required(),
+    debtLimit: Joi.number().optional(),
   });
 
   return schema.validate(client);
