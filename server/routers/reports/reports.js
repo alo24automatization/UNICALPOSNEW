@@ -737,14 +737,11 @@ module.exports.getPayment = async (req, res) => {
 // aslo to this but bro dont change my other codes only add pagination
 module.exports.getDebtsReport = async (req, res) => {
   try {
-    const { market, clientName, phoneNumber, currentPage, countPage } = req.body;
+    const { market, client, clientName, phoneNumber, currentPage, countPage } = req.body;
 
     const page = currentPage ? parseInt(currentPage) : 1; // Default to page 1
     const limit = countPage ? parseInt(countPage) : 10; // Default to 10 items per page
     const skip = (page - 1) * limit; // Calculate the number of documents to skip
-
-    const name = clientName ? regExpression(clientName) : '';
-    const phone = phoneNumber ? regExpression(phoneNumber) : '';
 
     const marketData = await Market.findById(market);
     const reduce = (arr, el) => arr?.reduce((prev, item) => prev + (item[el] || 0), 0);
@@ -752,32 +749,19 @@ module.exports.getDebtsReport = async (req, res) => {
     if (!marketData) {
       return res.status(400).json({ message: `Diqqat! Do'kon haqida malumotlar topilmadi!` });
     }
+    const filter = { market };
 
-    let clients = [];
-    if (name && !phone) {
-      clients = await Client.find({
-        market,
-        name: name,
-      }).select('-isArchive -updatedAt -__v');
-    } else if (!name && phone) {
-      clients = await Client.find({
-        market,
-        phoneNumber: phone,
-      }).select('-isArchive -updatedAt -__v');
-    } else if (name && phone) {
-      clients = await Client.find({
-        market,
-        name: name,
-        phoneNumber: phone,
-      }).select('-isArchive -updatedAt -__v');
-    } else {
-      clients = await Client.find({
-        market,
-      })
-        .select('-isArchive -updatedAt -__v')
-        .skip(currentPage * countPage) // Skip documents for pagination
-        .limit(countPage); // Limit the number of documents per page
+    if (clientName) filter.name = regExpression(clientName);
+    if (phoneNumber) filter.phoneNumber = regExpression(phoneNumber);
+    if (client) filter._id = client;
+
+    let query = Client.find(filter).select('-isArchive -updatedAt -__v');
+
+    if (!clientName && !phoneNumber && !client) {
+      query = query.skip(skip).limit(limit);
     }
+
+    const clients = await query;
 
     const debtsreport = [];
     for (const client of clients) {

@@ -358,6 +358,7 @@ module.exports.register = async (req, res) => {
         user,
         saleconnector: saleconnector._id,
         products,
+        useBalance,
       });
       await newPayment.save();
       saleconnector.payments.push(newPayment._id);
@@ -1065,7 +1066,7 @@ module.exports.getsaleconnectors = async (req, res) => {
         })
         .populate(
           'payments',
-          'payment paymentuzs comment totalprice totalpriceuzs createdAt cash cashuzs card carduzs transfer transferuzs',
+          'payment paymentuzs comment totalprice totalpriceuzs createdAt cash cashuzs card carduzs transfer transferuzs useBalance',
         )
         .populate(
           'discounts',
