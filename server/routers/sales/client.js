@@ -633,7 +633,7 @@ module.exports.getClientsSales = async (req, res) => {
 //* ------------------------------- CLIENT BALANCE -------------------------------
 module.exports.getClientBalanceTransactions = async (req, res) => {
   try {
-    const { page = 1, limit = 20, from, to, search, market } = req.query;
+    const { page = 1, limit = 20, from, to, search, market } = req.body;
     const pageNumber = Math.max(parseInt(page, 10) || 1, 1);
     const limitNumber = Math.max(parseInt(limit, 10) || 20, 1);
     const filter = { client: {} };
