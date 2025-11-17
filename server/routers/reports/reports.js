@@ -755,28 +755,22 @@ module.exports.getDebtsReport = async (req, res) => {
 
     let clients = [];
     if (name && !phone) {
-      console.log('name');
       clients = await Client.find({
         market,
         name: name,
       }).select('-isArchive -updatedAt -__v');
     } else if (!name && phone) {
-      console.log('phone');
       clients = await Client.find({
         market,
         phoneNumber: phone,
       }).select('-isArchive -updatedAt -__v');
     } else if (name && phone) {
-      console.log(name);
-      console.log(phone);
-      console.log('name && phone');
       clients = await Client.find({
         market,
         name: name,
         phoneNumber: phone,
       }).select('-isArchive -updatedAt -__v');
     } else {
-      console.log('notttt');
       clients = await Client.find({
         market,
       })
@@ -784,8 +778,6 @@ module.exports.getDebtsReport = async (req, res) => {
         .skip(currentPage * countPage) // Skip documents for pagination
         .limit(countPage); // Limit the number of documents per page
     }
-
-    // console.log(clients);
 
     const debtsreport = [];
     for (const client of clients) {
@@ -878,7 +870,6 @@ module.exports.getDebtsReport = async (req, res) => {
           }
         }
         debtsreport.push(...reports);
-        console.log(debtsreport.length);
       } else {
         continue;
       }
