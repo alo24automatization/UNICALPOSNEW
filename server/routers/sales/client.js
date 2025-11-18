@@ -497,7 +497,7 @@ module.exports.getClients = async (req, res) => {
         })
         .populate('payments', 'payment paymentuzs comment totalprice totalpriceuzs createdAt')
         .populate('discounts', 'discount discountuzs procient products totalprice totalpriceuzs')
-        .populate({ path: 'client', select: 'name phoneNumber' })
+        .populate({ path: 'client', select: 'name phoneNumber debtLimit balance' })
         .populate('packman', 'name')
         .populate('user', 'firstname lastname')
         .populate('dailyconnectors', 'comment');
@@ -546,11 +546,12 @@ module.exports.getClients = async (req, res) => {
       const newClient = {
         _id: client._id,
         name: client.name,
+        phoneNumber: client.phoneNumber,
         market: client.market,
         packman: client.packman,
         balance: client.balance,
+        debtLimit: client.debtLimit,
         saleconnector: s,
-        phoneNumber: client.phoneNumber,
       };
       newClients.push(newClient);
     }
