@@ -123,35 +123,35 @@ function CreateProductForm({
                         type={'text'}
                     />
                 </>
-                <>
+                {/* <> */}
                     {/* -- maxsulotlar soni -- */}
-                    <FieldContainer
+                    {/* <FieldContainer
                         value={totalMetrOfProduct}
                         onChange={handleChangeNumberOfProduct}
                         label={t('Jami metrda')}
                         placeholder={`${t('misol')}: 100`}
                         type={'text'}
                         disabled
-                    />
-                </>
-                <>
+                    /> */}
+                {/* </> */}
+                {/* <> */}
                     {/* -- maxsulotlar soni -- */}
-                    <FieldContainer
+                    {/* <FieldContainer
                         value={metrPriceOfProduct}
                         onChange={handleMetrPriceOfProduct}
                         label={t('Sotish metrda')}
                         placeholder={`${t('misol')}: 100`}
                         type={'text'}
-                    />
-                    <FieldContainer
+                    /> */}
+                    {/* <FieldContainer
                         value={metrIncPriceOfProduct}
                         // onChange={handleMetrPriceOfProduct}
                         label={t('Kelish metrda')}
                         placeholder={`${t('misol')}: 100`}
                         type={'text'}
                         disabled
-                    />
-                </>
+                    /> */}
+                {/* </> */}
 
                 {pageName !== 'accept' && (
                     <>
@@ -204,7 +204,7 @@ function CreateProductForm({
                     placeholder={`${t('misol')}: 300`}
                     type={'text'}
                 />
-                <div style={{maxWidth: "300px"}}>
+                {/* <div style={{maxWidth: "300px"}}>
                     <FieldContainer
                         value={productWidth}
                         onChange={handleChangeProductWidth}
@@ -212,7 +212,7 @@ function CreateProductForm({
                         placeholder={`${t('misol')}: 100 metr`}
                         type={'text'}
                     />
-                </div>
+                </div> */}
                 {/* <FieldContainer
                     value={productHeight}
                     onChange={handleChangeProductHeight}
