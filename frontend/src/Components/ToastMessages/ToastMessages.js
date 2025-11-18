@@ -175,3 +175,6 @@ export const productExchangesFilial = () =>
 // Universal Messages
 export const universalToast = (message, type, option = {}) =>
     toast[type](message, option)
+
+export const debtLimitWarnig = () =>
+    toast.warn("Siz qarzingiz chegarasidan oshib ketdingiz")

@@ -55,12 +55,12 @@ export const ClientTableRow = ({
                                 ? (client?.saleconnector?.totalsales &&
                                     roundUsd(
                                         client?.saleconnector?.totalsales
-                                    ).toLocaleString('ru-RU')) ||
+                                    )?.toLocaleString('ru-RU')) ||
                                 0
                                 : (client?.saleconnector?.totalsalesuzs &&
                                     roundUzs(
                                         client?.saleconnector?.totalsalesuzs
-                                    ).toLocaleString('ru-RU')) ||
+                                    )?.toLocaleString('ru-RU')) ||
                                 0}{' '}
                             {currencyType}
                         </td>
@@ -70,21 +70,23 @@ export const ClientTableRow = ({
                                     ? (client?.saleconnector?.profit &&
                                         roundUsd(
                                             client?.saleconnector?.profit
-                                        ).toLocaleString('ru-RU')) ||
+                                        )?.toLocaleString('ru-RU')) ||
                                     0
                                     : (client?.saleconnector?.profituzs &&
                                         roundUzs(
                                             client?.saleconnector?.profituzs
-                                        ).toLocaleString('ru-RU')) ||
+                                        )?.toLocaleString('ru-RU')) ||
                                     0}{' '}
                                 {currencyType}
                             </td>
                         )}
                         <td className='text-left td'>
-                            {client?.balance} {' '}
+                            {client?.balance?.toLocaleString('ru-RU')} {' '}
                             {currencyType}
                         </td>
-                        <td className='text-left td'>0 UZS</td>
+                        <td className='text-left td'>
+                            {client?.debtLimit?.toLocaleString('ru-RU')}{' '} {currencyType}
+                        </td>
                         <td className='border-r-0 td py-[0.375rem]'>
                             <div className='flex items-center justify-center gap-[0.625rem]'>
                                 <TableBtn
@@ -153,13 +155,13 @@ export const ClientTableRow = ({
                                     ? (client?.saleconnector?.totalsales &&
                                         roundUsd(
                                             client?.saleconnector?.totalsales
-                                        ).toLocaleString('ru-RU')) ||
+                                        )?.toLocaleString('ru-RU')) ||
                                     0
                                     : (client?.saleconnector?.totalsalesuzs &&
                                         roundUzs(
                                             client?.saleconnector
                                                 ?.totalsalesuzs
-                                        ).toLocaleString('ru-RU')) ||
+                                        )?.toLocaleString('ru-RU')) ||
                                     0}{' '}
                                 {currencyType}
                             </p>
@@ -173,13 +175,13 @@ export const ClientTableRow = ({
                                         ? (client?.saleconnector?.profit &&
                                             roundUsd(
                                                 client?.saleconnector?.profit
-                                            ).toLocaleString('ru-RU')) ||
+                                            )?.toLocaleString('ru-RU')) ||
                                         0
                                         : (client?.saleconnector?.profituzs &&
                                             roundUzs(
                                                 client?.saleconnector
                                                     ?.profituzs
-                                            ).toLocaleString('ru-RU')) ||
+                                            )?.toLocaleString('ru-RU')) ||
                                         0}{' '}
                                     {currencyType}
                                 </p>
@@ -229,7 +231,7 @@ export const ClientTableRow = ({
                                     (el.saleconnector?.totalsales || 0),
                                 0
                             )
-                        ).toLocaleString('ru-RU')
+                        )?.toLocaleString('ru-RU')
                         : roundUzs(
                             [...data].reduce(
                                 (prev, el) =>
@@ -237,7 +239,7 @@ export const ClientTableRow = ({
                                     (el.saleconnector?.totalsalesuzs || 0),
                                 0
                             )
-                        ).toLocaleString('ru-RU')}{' '}
+                        )?.toLocaleString('ru-RU')}{' '}
                     {currencyType}
                 </td>
                 {type === 'Director' && (
@@ -250,7 +252,7 @@ export const ClientTableRow = ({
                                         (el.saleconnector?.profit || 0),
                                     0
                                 )
-                            ).toLocaleString('ru-RU')
+                            )?.toLocaleString('ru-RU')
                             : roundUzs(
                                 [...data].reduce(
                                     (prev, el) =>
@@ -258,14 +260,22 @@ export const ClientTableRow = ({
                                         (el.saleconnector?.profituzs || 0),
                                     0
                                 )
-                            ).toLocaleString('ru-RU')}{' '}
+                            )?.toLocaleString('ru-RU')}{' '}
                         {currencyType}
                     </td>
                 )}
                 <td className='text-left td font-bold'>
-                    {[...data].reduce((prev, el) => prev + (el.balance || 0), 0).toLocaleString('ru-RU')} {currencyType}
+                    {[...data].reduce((prev, el) => prev + (el.balance || 0), 0)?.toLocaleString('ru-RU')} {currencyType}
                 </td>
-                <td className='text-left td'>0 UZS</td>
+                <td className='text-left td font-bold'>
+                    {[...data].reduce(
+                        (prev, el) =>
+                            prev +
+                            (el?.debtLimit || 0),
+                        0
+                    )?.toLocaleString('ru-RU')}{' '}
+                    {currencyType}
+                </td>
                 <td className='border-r-0 td py-[0.375rem]'></td>
             </tr>
         </>

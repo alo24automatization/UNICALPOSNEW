@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom'
 import Dates from '../Dates/Dates.js'
 import Checkbox from '../Checkbox/Checkbox.js'
 import { useEffect, useState } from 'react'
+import Api from '../../Config/Api.js'
 
 function CustomerPayment({
     returned,
@@ -25,10 +26,12 @@ function CustomerPayment({
     hasDiscount,
     hasDiscountBtn,
     debt,
+    id,
     allPayment,
     paid = 0,
     client = '',
     balans,
+    debtLimit,
     onChange,
     onClose,
     changePaymentType,
@@ -45,10 +48,27 @@ function CustomerPayment({
 }) {
     const location = useLocation()
     const [checkedBalans, setCheckedBalans] = useState(false)
+    const [clientValue, setClientValue] = useState('');
+
+    const getClient = async () => {
+        try {
+            const {data} = await Api.post(
+                '/reports/getdebtsreport',
+                {
+                    client: id
+                }
+            )
+
+            if (data?.data?.length) {
+                setClientValue(data?.data?.[0])
+            }
+        } catch (error) {}
+    }
 
     useEffect(() => {
         if (active) {
             setCheckedBalans(false)
+            getClient();
         }
     }, [active])
     const defineLabel = () => {
@@ -61,7 +81,7 @@ function CustomerPayment({
                         keyInput={type}
                         onChange={(value, keyInput) => onChange(value, keyInput, checkedBalans)}
                         onClose={onClose}
-                        disabled={disableInputsCashCard}
+                        disabled={disableInputsCashCard || checkedBalans}
                         label={t('Plastik')}
                     />
                 )
@@ -73,7 +93,7 @@ function CustomerPayment({
                         keyInput={type}
                         onChange={(value, keyInput) => onChange(value, keyInput, checkedBalans)}
                         onClose={onClose}
-                        disabled={disableInputsCashCard}
+                        disabled={disableInputsCashCard || checkedBalans}
                         label={t('O`tkazma')}
                     />
                 )
@@ -94,13 +114,14 @@ function CustomerPayment({
                         onChange={(value, keyInput) => onChange(value, keyInput, checkedBalans)}
                         onClose={onClose}
                         label={t(obj.label)}
+                        disabled={checkedBalans}
                     />
                 ))
             default:
                 return (
                     <PaymentInput
                         key={'sale-cash'}
-                        disabled={disableInputsCashCard}
+                        disabled={disableInputsCashCard || checkedBalans}
                         value={cash}
                         onChange={(value, keyInput) => onChange(value, keyInput, checkedBalans)}
                         keyInput={type}
@@ -116,6 +137,20 @@ function CustomerPayment({
             onChange(balans, type)
         }
     }, [checkedBalans]);
+
+    const isWarrnigDebt = () => {
+        const payment = card + cash + transfer;
+
+        if (+payment === +allPayment) {
+            return false
+        };
+
+        if (+payment > +debtLimit - +(clientValue?.debtuzs ?? 0)) {
+            return true
+        };
+
+        return false;
+    }
     
     const { currencyType } = useSelector((state) => state.currency)
     return (
@@ -199,6 +234,16 @@ function CustomerPayment({
 
                         <li className='custom-payment-ul-li'>
                             <span className='custom-payment-text-style'>
+                                {t('Qarz Limit')}
+                            </span>
+                            <h3 className='text-[1rem] text-loginButton'>
+                                {(debtLimit - (clientValue?.debtuzs || 0) > 0 ? debtLimit - (clientValue?.debtuzs || 0) : 0)?.toLocaleString('ru-Ru')}{' '}
+                                {currencyType}
+                            </h3>
+                        </li>                        
+
+                        <li className='custom-payment-ul-li'>
+                            <span className='custom-payment-text-style'>
                                 {allPayment < 0
                                     ? t('Qaytarilayotgan')
                                     : checkedBalans ? t('Balansdan') : t('To`lanayotgan')}{' '}
@@ -222,7 +267,12 @@ function CustomerPayment({
                 </div>
                 <div className='bottom-payment w-full flex flex-col gap-[1.25rem] border-t-[1px] border-black-200 pt-[1.25rem]'>
                     {client && (
-                        <div className="flex items-start gap-[10px]">
+                        <div 
+                            className="flex items-start gap-[10px]"
+                            style={{
+                                opacity: !balans ? 0.5 : 1
+                            }}
+                        >
                             <div className="flex items-center justify-center">
                                 <Checkbox 
                                     id="balans" 
@@ -230,6 +280,7 @@ function CustomerPayment({
                                     value={checkedBalans} onChange={() => 
                                         setCheckedBalans((prevState) => !prevState)
                                     }
+                                    disabled={!balans}
                                 />
                             </div>
                             <div>
@@ -288,7 +339,7 @@ function CustomerPayment({
                         loading={clickdelay}
                         onClick={
                             !clickdelay
-                                ? () => handleClickPay(checkedBalans)
+                                ? () => handleClickPay(checkedBalans, isWarrnigDebt())
                                 : () => console.log('wait')
                         }
                     // onDoubleClick={onDoubleClick}

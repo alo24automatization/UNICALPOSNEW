@@ -16,6 +16,7 @@ const axios = require('axios');
 const moment = require('moment');
 const { filter } = require('lodash');
 const { WarhouseProduct } = require('../../models/WarhouseProduct/WarhouseProduct');
+const { ClientBalanceTransactions } = require('../../models/Sales/ClientBalanceTransactions');
 
 const convertToUsd = (value) => Math.round(value * 1000) / 1000;
 const convertToUzs = (value) => Math.round(value);
@@ -51,7 +52,7 @@ const transferWarhouseProducts = async (products) => {
 module.exports.register = async (req, res) => {
   try {
     let {
-      use_balance,
+      useBalance,
       saleproducts,
       client,
       packman,
@@ -97,7 +98,37 @@ module.exports.register = async (req, res) => {
       }, 0),
     );
 
-    if (checkPayments(totalprice, payment, discount, debt)) {
+    const paymentCashUzs = Number(payment.cashuzs) || 0;
+    const paymentCardUzs = Number(payment.carduzs) || 0;
+    const paymentTransferUzs = Number(payment.transferuzs) || 0;
+    const paymentTotalUzs = paymentCashUzs + paymentCardUzs + paymentTransferUzs;
+    const discountTotalUzs = Number(discount.discountuzs) || 0;
+    const usdRate = totalprice > 0 ? totalpriceuzs / totalprice : 0;
+
+    let balanceUsedUzs = 0;
+    let balanceUsedUsd = 0;
+
+    // if (useBalance && foundedClient) {
+    //   const totalDueUzs = Math.max(totalpriceuzs - discountTotalUzs, 0);
+    //   const remainingAfterPayment = totalDueUzs - paymentTotalUzs;
+    //   if (remainingAfterPayment <= 0) {
+    //     debt.debtuzs = 0;
+    //     debt.debt = 0;
+    //   } else {
+    //     balanceUsedUzs = Math.min(remainingAfterPayment, foundedClient.balance || 0);
+    //     if (balanceUsedUzs > 0 && usdRate > 0) {
+    //       balanceUsedUsd = convertToUsd(balanceUsedUzs / usdRate);
+    //     }
+    //     const remainingAfterBalance = remainingAfterPayment - balanceUsedUzs;
+    //     debt.debtuzs = convertToUzs(remainingAfterBalance);
+    //     debt.debt = usdRate > 0 ? convertToUsd(remainingAfterBalance / usdRate) : 0;
+    //   }
+    // } else {
+    //   debt.debtuzs = convertToUzs(Number(debt.debtuzs) || 0);
+    //   debt.debt = convertToUsd(Number(debt.debt) || 0);
+    // }
+
+    if (checkPayments(totalprice, payment, discount, debt, balanceUsedUsd)) {
       return res.status(400).json({
         message: `Diqqat! To'lov hisobida xatolik yuz bergan!`,
       });
@@ -314,19 +345,20 @@ module.exports.register = async (req, res) => {
         comment: payment.comment,
         payment: convertToUsd(payment.card + payment.cash + payment.transfer),
         paymentuzs: convertToUzs(payment.carduzs + payment.cashuzs + payment.transferuzs),
-        card: payment.card,
-        cash: payment.cash,
-        transfer: payment.transfer,
-        carduzs: payment.carduzs,
-        cashuzs: payment.cashuzs,
-        transferuzs: payment.transferuzs,
+        card: useBalance ? 0 : payment.card,
+        cash: useBalance ? 0 : payment.cash,
+        transfer: useBalance ? 0 : payment.transfer,
+        carduzs: useBalance ? 0 : payment.carduzs,
+        cashuzs: useBalance ? 0 : payment.cashuzs,
+        transferuzs: useBalance ? 0 : payment.transferuzs,
         type: payment.type,
-        totalprice,
-        totalpriceuzs,
+        totalprice: useBalance ? 0 : convertToUsd(totalprice),
+        totalpriceuzs: useBalance ? 0 : convertToUzs(totalpriceuzs),
         market,
         user,
         saleconnector: saleconnector._id,
         products,
+        useBalance,
       });
       await newPayment.save();
       saleconnector.payments.push(newPayment._id);
@@ -396,7 +428,7 @@ module.exports.register = async (req, res) => {
         })
         .populate(
           'payment',
-          'payment paymentuzs cash cashuzs card carduzs transfer transferuzs totalprice totalpriceuzs',
+          'payment paymentuzs cash cashuzs card carduzs transfer transferuzs totalprice totalpriceuzs useBalance',
         )
         .populate('discount', 'discount discountuzs')
         .populate('debt', 'debt debtuzs pay_end_date')
@@ -514,6 +546,26 @@ module.exports.register = async (req, res) => {
       filteredProductsSale.length > 0
         ? filteredProductsSale.reduce((sum, item) => sum + item.totaldebtuzs, 0)
         : 0;
+
+    if (foundedClient && useBalance) {
+      let total = totalpriceuzs;
+      if (foundedClient.balance - total >= 0) {
+        foundedClient.balance -= total;
+      }else{
+        total = foundedClient.balance;
+        foundedClient.balance = 0;
+      }
+      
+      await Promise.all([
+        foundedClient.save(),
+        ClientBalanceTransactions.create({
+          client: foundedClient._id,
+          type: 'debit',
+          paymentType: 'cash',
+          amount: total,
+        }),
+      ]);
+    }
 
     res.status(201).send({
       ...connector,
@@ -1014,7 +1066,7 @@ module.exports.getsaleconnectors = async (req, res) => {
         })
         .populate(
           'payments',
-          'payment paymentuzs comment totalprice totalpriceuzs createdAt cash cashuzs card carduzs transfer transferuzs',
+          'payment paymentuzs comment totalprice totalpriceuzs createdAt cash cashuzs card carduzs transfer transferuzs useBalance',
         )
         .populate(
           'discounts',
