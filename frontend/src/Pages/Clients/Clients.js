@@ -52,7 +52,7 @@ const ClientsPage = () => {
                 { title: t('Savdo'), styles: 'w-[10%] text-left' },
                 { title: t('Sof foyda'), styles: 'w-[10%] text-left' },
                 { title: t('Balans'), styles: 'w-[10%] text-left' },
-                { title: t('Qarz'), styles: 'w-[10%] text-left' },
+                { title: t('Qarz limit'), styles: 'w-[10%] text-left' },
                 { title: '', styles: 'w-[8%] text-left' },
             ]
             : [
@@ -62,7 +62,7 @@ const ClientsPage = () => {
                 { title: t('Telefon'), styles: 'w-[15%] text-left' },
                 { title: t('Savdo'), styles: 'w-[10%] text-left' },
                 { title: t('Balans'), styles: 'w-[10%] text-left' },
-                { title: t('Qarz'), styles: 'w-[10%] text-left' },
+                { title: t('Qarz limit'), styles: 'w-[10%] text-left' },
                 { title: '', styles: 'w-[8%] text-left' },
             ]
 
@@ -99,6 +99,7 @@ const ClientsPage = () => {
     const [modalOpen, setModalOpen] = useState(false)
     const [isOpenBalanceModal, setIsOpenBalanceModal] = useState(false)
     const [clientId, setClientId] = useState(null)
+    const [debtLimit, setDebtLimit] = useState(0)
     // modal toggle
     const toggleModal = () => {
         setModalVisible(!modalVisible)
@@ -137,6 +138,7 @@ const ClientsPage = () => {
         setClientName(client.name || '')
         setPhoneNumber(client.phoneNumber)
         setCurrentClient(client)
+        setDebtLimit(client?.debtLimit)
         setStickyForm(true)
     }
 
@@ -185,6 +187,7 @@ const ClientsPage = () => {
         } else {
             const body = {
                 name: clientName,
+                debtLimit,
                 phoneNumber,
                 packman: (packman && packman.value) || null,
                 currentPage,
@@ -224,6 +227,7 @@ const ClientsPage = () => {
                 currentPage,
                 phoneNumber,
                 countPage: showByTotal,
+                debtLimit,
                 search: {
                     client: searchByName.replace(/\s+/g, ' ').trim(),
                 },
@@ -321,6 +325,10 @@ const ClientsPage = () => {
         setPackman(e)
     }
 
+    const handleChangeDebtLimit = (e) => {
+        setDebtLimit(e.target.value)
+    }
+
     const openModalBalanceHandler = (clientRowId) => {
         setIsOpenBalanceModal(true)
         setClientId(clientRowId)
@@ -416,6 +424,15 @@ const ClientsPage = () => {
                         maxWidth={'lg:w-[21rem] w-[90vw]'}
                         type={'string'}
                         onChange={handleChangeClientName}
+                    />
+
+                    <FieldContainer
+                        value={debtLimit}
+                        label={t('Qarz limit')}
+                        placeholder={t('misol: 1 000 000')}
+                        maxWidth={'lg:w-[21rem] w-[90vw]'}
+                        type={'number'}
+                        onChange={handleChangeDebtLimit}
                     />
                     <div className={'flex gap-[1.25rem] grow w-[18.3125rem]'}>
                         <Button

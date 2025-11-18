@@ -46,6 +46,7 @@ import { ClientSaleTable } from './TableRows/ClientSaleTable'
 import PackmanProfitClientsTableRow from './TableRows/PackmanProfitClientsTableRow.js'
 import { SellerPayments } from './TableRows/SellerPayments'
 import SuppliersProductTable from './TableRows/SuppliersProductTable'
+import { UsersBalanceTableRow } from './TableRows/UsersBalanceTableRow.js'
 
 function Table({
     showClients,
@@ -647,6 +648,14 @@ function Table({
                         currentPage={currentPage}
                         countPage={countPage}
                         handlePrint={Print}
+                    />
+                )
+            case 'usersBalance':
+                return (
+                    <UsersBalanceTableRow 
+                        data={data}
+                        currentPage={currentPage}
+                        countPage={countPage}
                     />
                 )
             default:
