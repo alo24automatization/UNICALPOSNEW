@@ -20,8 +20,9 @@ const reduce = (arr, el) => arr.reduce((prev, item) => prev + (item[el] || 0), 0
 
 module.exports.register = async (req, res) => {
   try {
-    const { name, phoneNumber, market, packman, search, currentPage, countPage } = req.body;
-    const { error } = validateClient({ name, phoneNumber, market });
+    const { name, phoneNumber, debtLimit, market, packman, search, currentPage, countPage } =
+      req.body;
+    const { error } = validateClient({ name, phoneNumber, market, debtLimit });
     if (error) {
       return res.status(400).json({
         error: error.message,
@@ -45,11 +46,16 @@ module.exports.register = async (req, res) => {
       });
     }
 
-    const newClient = new Client({
+    const clientData = {
       name,
       market,
       phoneNumber,
-    });
+    };
+
+    if (debtLimit) {
+      clientData.debtLimit = debtLimit;
+    }
+    const newClient = new Client(clientData);
     await newClient.save();
 
     if (packman) {
@@ -107,7 +113,7 @@ module.exports.getAll = async (req, res) => {
     }
 
     const clients = await Client.find({ market })
-      .select('name phoneNumber balance')
+      .select('name phoneNumber balance debtLimit')
       .populate('packman', 'name')
       .lean();
 
@@ -134,7 +140,8 @@ module.exports.getAll = async (req, res) => {
 
 module.exports.updateClient = async (req, res) => {
   try {
-    const { _id, market, name, phoneNumber, packman, search, currentPage, countPage } = req.body;
+    const { _id, market, name, phoneNumber, debtLimit, packman, search, currentPage, countPage } =
+      req.body;
     const marke = await Market.findById(market);
     if (!marke) {
       return res.status(400).json({ message: "Diqqat! Do'kon haqida malumot topilmadi!" });
@@ -147,6 +154,11 @@ module.exports.updateClient = async (req, res) => {
       name,
       phoneNumber,
     };
+
+    if (debtLimit) {
+      updatedClient.debtLimit = debtLimit;
+    }
+
     const packMan = await Packman.findById(packman);
     if (packMan) {
       await Packman.findByIdAndUpdate(client.packman, {
@@ -336,7 +348,7 @@ module.exports.getClients = async (req, res) => {
         packman,
       })
         .sort({ _id: -1 })
-        .select('name market packman phoneNumber')
+        .select('name market balance debtLimit packman phoneNumber')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -351,7 +363,7 @@ module.exports.getClients = async (req, res) => {
         phoneNumber: phone,
       })
         .sort({ _id: -1 })
-        .select('name market phoneNumber packman')
+        .select('name market balance debtLimit phoneNumber packman')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -366,7 +378,7 @@ module.exports.getClients = async (req, res) => {
         name,
       })
         .sort({ _id: -1 })
-        .select('name market phoneNumber packman')
+        .select('name market balance debtLimit phoneNumber packman')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -383,7 +395,7 @@ module.exports.getClients = async (req, res) => {
         packman,
       })
         .sort({ _id: -1 })
-        .select('name market phoneNumber packman')
+        .select('name market balance debtLimit phoneNumber packman')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -400,7 +412,7 @@ module.exports.getClients = async (req, res) => {
         packman,
       })
         .sort({ _id: -1 })
-        .select('name market phoneNumber packman')
+        .select('name market balance debtLimit phoneNumber packman')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -417,7 +429,7 @@ module.exports.getClients = async (req, res) => {
         phoneNumber: phone,
       })
         .sort({ _id: -1 })
-        .select('name market phoneNumber packman')
+        .select('name market balance debtLimit phoneNumber packman')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -430,7 +442,7 @@ module.exports.getClients = async (req, res) => {
         market,
       })
         .sort({ _id: -1 })
-        .select('name market phoneNumber packman')
+        .select('name market balance debtLimit phoneNumber packman')
         .populate('packman', 'name')
         .skip(currentPage * countPage)
         .limit(countPage);
@@ -485,7 +497,7 @@ module.exports.getClients = async (req, res) => {
         })
         .populate('payments', 'payment paymentuzs comment totalprice totalpriceuzs createdAt')
         .populate('discounts', 'discount discountuzs procient products totalprice totalpriceuzs')
-        .populate({ path: 'client', select: 'name phoneNumber' })
+        .populate({ path: 'client', select: 'name phoneNumber debtLimit balance' })
         .populate('packman', 'name')
         .populate('user', 'firstname lastname')
         .populate('dailyconnectors', 'comment');
@@ -534,10 +546,12 @@ module.exports.getClients = async (req, res) => {
       const newClient = {
         _id: client._id,
         name: client.name,
+        phoneNumber: client.phoneNumber,
         market: client.market,
         packman: client.packman,
+        balance: client.balance,
+        debtLimit: client.debtLimit,
         saleconnector: s,
-        phoneNumber: client.phoneNumber,
       };
       newClients.push(newClient);
     }
@@ -632,7 +646,7 @@ module.exports.getClientsSales = async (req, res) => {
 //* ------------------------------- CLIENT BALANCE -------------------------------
 module.exports.getClientBalanceTransactions = async (req, res) => {
   try {
-    const { page = 1, limit = 20, from, to, search } = req.query;
+    const { page = 1, limit = 20, from, to, search, market, client } = req.body;
     const pageNumber = Math.max(parseInt(page, 10) || 1, 1);
     const limitNumber = Math.max(parseInt(limit, 10) || 20, 1);
     const filter = {};
@@ -656,13 +670,23 @@ module.exports.getClientBalanceTransactions = async (req, res) => {
       filter.createdAt = createdAt;
     }
 
-    if (search) {
-      const searchRegex = new RegExp(search, 'i');
-      const matchedClients = await Client.find({
-        $or: [{ name: searchRegex }, { phoneNumber: searchRegex }],
-      })
-        .select('_id')
-        .lean();
+    const clientQuery = {};
+
+    if (client) {
+      filter.client = client;
+    } else {
+      if (market) {
+        clientQuery.market = market;
+      }
+
+      if (search) {
+        const searchRegex = new RegExp(search, 'i');
+        clientQuery.$or = [{ name: searchRegex }, { phoneNumber: searchRegex }];
+      }
+    }
+
+    if (!client && Object.keys(clientQuery).length) {
+      const matchedClients = await Client.find(clientQuery).select('_id').lean();
 
       if (!matchedClients.length) {
         return res.status(201).json({
@@ -671,7 +695,8 @@ module.exports.getClientBalanceTransactions = async (req, res) => {
         });
       }
 
-      filter.client = { $in: matchedClients.map((client) => client._id) };
+      const clientIds = matchedClients.map((client) => client._id);
+      filter.client = clientIds.length === 1 ? clientIds[0] : { $in: clientIds };
     }
 
     const [clientBalanceTransactions, count] = await Promise.all([
@@ -679,8 +704,7 @@ module.exports.getClientBalanceTransactions = async (req, res) => {
         .sort({ createdAt: -1 })
         .skip((pageNumber - 1) * limitNumber)
         .limit(limitNumber)
-        .populate('client', 'name phoneNumber')
-        .populate('user', 'firstname lastname'),
+        .populate('client', 'name phoneNumber balance debtLimit'),
       ClientBalanceTransactions.countDocuments(filter),
     ]);
 
@@ -700,46 +724,42 @@ module.exports.getClientBalanceTransactions = async (req, res) => {
 
 module.exports.fillClientBalance = async (req, res) => {
   try {
-    const { clientId, cash = 0, card = 0, transfer = 0 } = req.body;
-    
+    const { clientId, paymentType, amount } = req.body;
+
     if (!clientId) {
       return res.status(400).json({ message: 'Mijoz tanlanmagan.' });
     }
 
+    if (!['cash', 'card', 'transfer'].includes(paymentType)) {
+      return res.status(400).json({ message: 'To`lov turi tanlanmagan.' });
+    }
+
     const client = await Client.findById(clientId);
-    
+
     if (!client) {
       return res.status(404).json({ message: 'Mijoz topilmadi.' });
     }
 
-    const numericCash = Number(cash) || 0;
-    const numericCard = Number(card) || 0;
-    const numericTransfer = Number(transfer) || 0;
+    const numericAmount = Number(amount) || 0;
 
-    if ([numericCash, numericCard, numericTransfer].some((value) => value < 0)) {
+    if (numericAmount < 0) {
       return res.status(400).json({ message: "Qiymatlar manfiy bo'lishi mumkin emas." });
     }
 
-    const totalAmount = numericCash + numericCard + numericTransfer;
-    if (!totalAmount) {
-      return res.status(400).json({ message: "Balansni to'ldirish uchun summa kiritilmadi." });
-    }
-
-    client.balance += totalAmount;
-    await client.save();
-
-    const transaction = await ClientBalanceTransactions.create({
-      client: client._id,
-      type: 'credit',
-      cash: numericCash,
-      card: numericCard,
-      transfer: numericTransfer,
-    });
+    client.balance += numericAmount;
+    await Promise.all([
+      client.save(),
+      ClientBalanceTransactions.create({
+        paymentType,
+        client: client._id,
+        type: 'credit',
+        amount: numericAmount,
+      }),
+    ]);
 
     res.status(201).json({
       message: "Mijoz balansi muvaffaqiyatli to'ldirildi.",
       client: { _id: client._id, name: client.name, balance: client.balance },
-      transaction,
     });
   } catch (error) {
     console.log(error);

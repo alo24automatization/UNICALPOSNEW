@@ -54,7 +54,7 @@ router.post('/client/getclientssales', auth, (req, res) => {
   require('./client').getClientsSales(req, res);
 });
 
-router.get('/client/getclientTransactions', auth, (req, res) => {
+router.post('/client/getclientTransactions', auth, (req, res) => {
   require('./client').getClientBalanceTransactions(req, res);
 });
 
