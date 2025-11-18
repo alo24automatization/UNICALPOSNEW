@@ -86,6 +86,8 @@ const WarhouseProducts = lazy(() =>
 
 const Pos = lazy(() => import('./Pos/Pos'))
 
+const Balance = lazy(() => import('./Balance/Balance'))
+
 // <-- pages
 
 const directorRoutes = [
@@ -315,6 +317,10 @@ const directorRoutes = [
     }, {
         path: '/shaxsiy/smsapi',
         element: <SmsApi />
+    },
+    {
+        path: '/balance',
+        element: <Balance />
     }
 ]
 const sellerRoutes = [

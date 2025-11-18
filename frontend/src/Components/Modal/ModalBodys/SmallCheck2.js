@@ -15,7 +15,6 @@ export const SmallCheck2 = forwardRef((props, ref) => {
         isReturned,
         totalOfBackAndDebt
     } = props;
-    console.log(selledPayments);
     const {market} = useSelector((state) => state.login)
     const {currencyType} = useSelector((state) => state.currency)
     const calculateDebt = (total = 0, payment = 0, discount = 0) => {
@@ -712,7 +711,7 @@ export const SmallCheck2 = forwardRef((props, ref) => {
                     className='text-black-900 text-[12px] font-bold pt-4'
                 >
                     {' '}
-                    {t('Qarz')}:{' '}
+                    {product?.payment?.useBalance ? t("Balansdan") : t('Qarz')}:{' '}
                     <span
                         style={{fontWeight: 'bolder'}}
                         className='text-black-900 text-[12px] font-bold'

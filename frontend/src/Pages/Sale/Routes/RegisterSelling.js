@@ -26,6 +26,7 @@ import SearchInput from '../../../Components/Inputs/SearchInput.js';
 import UniversalModal from '../../../Components/Modal/UniversalModal.js';
 import { UsdToUzs, UzsToUsd } from '../../../App/globalFunctions.js';
 import {
+  debtLimitWarnig,
   universalToast,
   warningCountSellPayment,
   warningCurrencyRate,
@@ -417,7 +418,7 @@ const RegisterSelling = () => {
     }
   };
 
-  const writePayment = (value, type, checkedBalans) => {
+  const writePayment = (value, type) => {
     const maxSum = Math.abs(allPayment) - Number(paymentDiscount);
     const maxSumUzs = Math.abs(allPaymentUzs) - Number(paymentDiscountUzs);
     if (currencyType === 'USD') {
@@ -703,6 +704,7 @@ const RegisterSelling = () => {
         label: client.name,
         saleconnectorid: client?.saleconnectorid || null,
         balans: client?.balance,
+        debtLimit: client?.debtLimit,
       })),
     ]);
     setUserValue('');
@@ -725,11 +727,11 @@ const RegisterSelling = () => {
     });
   };
 
-  const handleClickPay = (checkedBalans) => {
+  const handleClickPay = (checkedBalans, isWarrning) => {
     if (returnProducts.length) {
-      handleApproveReturn(checkedBalans);
+      handleApproveReturn(checkedBalans, isWarrning);
     } else {
-      handleApprovePay(checkedBalans);
+      handleApprovePay(checkedBalans, isWarrning);
     }
   };
 
@@ -747,7 +749,8 @@ const RegisterSelling = () => {
   };
 
   const [clickdelay, setClickDelay] = useState(false);
-  const handleApprovePay = (checkedBalans) => {
+  const handleApprovePay = (checkedBalans, isWarrning) => {
+    if (isWarrning) return debtLimitWarnig();
     handleClosePay();
     const body = {
       saleproducts: map(tableProducts, (product) => {
@@ -779,7 +782,8 @@ const RegisterSelling = () => {
         name: clientValue ? clientValue.label : userValue,
         packman: clientValue?.packman,
         phoneNumber,
-        balans: clientValue?.balans || null,
+        balans: clientValue?.balans,
+        debtLimit: clientValue?.debtLimit,
       },
       packman: packmanValue
         ? {
@@ -859,7 +863,9 @@ const RegisterSelling = () => {
     );
   };
 
-  const handleApproveReturn = (checkedBalans) => {
+  const handleApproveReturn = (checkedBalans, isWarrning) => {
+    if (isWarrning) return debtLimitWarnig();
+
     setClickDelay(true);
     handleClosePay();
     const body = {
@@ -1102,6 +1108,7 @@ const RegisterSelling = () => {
           packman: pack,
           saleconnectorid: client?.saleconnectorid || null,
           balans: client?.balance,
+          debtLimit: client?.debtLimit,
         })),
       );
     } else {
@@ -1116,6 +1123,7 @@ const RegisterSelling = () => {
           packman: client?.packman,
           saleconnectorid: client?.saleconnectorid || null,
           balans: client?.balance,
+          debtLimit: client?.debtLimit,
         })),
       ]);
     }
@@ -1742,6 +1750,7 @@ const RegisterSelling = () => {
         label: client.name,
         saleconnectorid: client?.saleconnectorid || null,
         balans: client?.balance,
+        debtLimit: client?.debtLimit,
       })),
     ]);
   }, [clients, t]);
@@ -2504,6 +2513,8 @@ const RegisterSelling = () => {
         onChange={handleChangePaymentInput}
         client={userValue || clientValue.label || packmanValue.label}
         balans={clientValue.balans}
+        debtLimit={clientValue.debtLimit}
+        id={clientValue.value}
         allPayment={currencyType === 'USD' ? allPayment : allPaymentUzs}
         card={currencyType === 'USD' ? paymentCard : paymentCardUzs}
         cash={currencyType === 'USD' ? paymentCash : paymentCashUzs}

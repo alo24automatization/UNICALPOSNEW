@@ -2,13 +2,13 @@ import {
     IoBusiness,
     IoCart,
     IoCash,
+    IoCellularOutline,
     IoExitOutline,
     IoHome,
     IoKeyOutline,
     IoListOutline,
     IoPeople,
     IoQrCode,
-    IoSettingsOutline,
     IoWallet,
 } from 'react-icons/io5'
 import { FaCashRegister, FaHandHoldingUsd, FaServer, FaSms } from 'react-icons/fa'
@@ -216,13 +216,13 @@ const navListForDirector = [
         path: 'valyuta',
         submenu: false,
     },
-    // {
-    //     id: 7,
-    //     label: 'Haqdorlar hisobi',
-    //     icon: <IoCart size={'1.5rem'} />,
-    //     path: 'balance',
-    //     submenu: false,
-    // },
+    {
+        id: 7,
+        label: 'Haqdorlar hisobi',
+        icon: <IoCellularOutline size={'1.5rem'} />,
+        path: 'balance',
+        submenu: false,
+    },
 ]
 export const navListForSeller = [
     {
