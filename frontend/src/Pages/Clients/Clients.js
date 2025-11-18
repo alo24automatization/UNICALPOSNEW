@@ -52,6 +52,7 @@ const ClientsPage = () => {
                 { title: t('Savdo'), styles: 'w-[10%] text-left' },
                 { title: t('Sof foyda'), styles: 'w-[10%] text-left' },
                 { title: t('Balans'), styles: 'w-[10%] text-left' },
+                { title: t('Qarz'), styles: 'w-[10%] text-left' },
                 { title: t('Qarz limit'), styles: 'w-[10%] text-left' },
                 { title: '', styles: 'w-[8%] text-left' },
             ]
@@ -62,6 +63,7 @@ const ClientsPage = () => {
                 { title: t('Telefon'), styles: 'w-[15%] text-left' },
                 { title: t('Savdo'), styles: 'w-[10%] text-left' },
                 { title: t('Balans'), styles: 'w-[10%] text-left' },
+                { title: t('Qarz'), styles: 'w-[10%] text-left' },
                 { title: t('Qarz limit'), styles: 'w-[10%] text-left' },
                 { title: '', styles: 'w-[8%] text-left' },
             ]
@@ -89,7 +91,7 @@ const ClientsPage = () => {
     const [deletedCLients, setDeletedClients] = useState(null)
     const [modalVisible, setModalVisible] = useState(false)
     const [stickyForm, setStickyForm] = useState(false)
-    const [showByTotal, setShowByTotal] = useState('10')
+    const [showByTotal, setShowByTotal] = useState('300')
     const [currentPage, setCurrentPage] = useState(0)
     const [filteredDataTotal, setFilteredDataTotal] = useState(total)
     const [searchByName, setSearchByName] = useState('')

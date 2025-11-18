@@ -138,19 +138,22 @@ function CustomerPayment({
         }
     }, [checkedBalans]);
 
-    const isWarrnigDebt = () => {
-        const payment = card + cash + transfer;
+    const warningDebt = () => {
+        // Сколько заплатил
+        const payment = Number(cash) + Number(card) + Number(transfer);
+        // Сумма долга за весь период
+        const currentDebt = Number(clientValue?.debtuzs ?? 0);
+        
+        // Текущий долг
+        const newDebt = allPayment - payment;
 
-        if (+payment === +allPayment) {
-            return false
-        };
+        if (newDebt <= 0) return false;
 
-        if (+payment > +debtLimit - +(clientValue?.debtuzs ?? 0)) {
-            return true
-        };
+        // Сколько долга клиент ещё может иметь
+        const allowedDebt = debtLimit - currentDebt;
 
-        return false;
-    }
+        return newDebt > allowedDebt;
+    };
     
     const { currencyType } = useSelector((state) => state.currency)
     return (
@@ -339,7 +342,7 @@ function CustomerPayment({
                         loading={clickdelay}
                         onClick={
                             !clickdelay
-                                ? () => handleClickPay(checkedBalans, isWarrnigDebt())
+                                ? () => handleClickPay(checkedBalans, warningDebt())
                                 : () => console.log('wait')
                         }
                     // onDoubleClick={onDoubleClick}

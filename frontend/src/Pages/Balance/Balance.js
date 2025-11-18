@@ -56,7 +56,7 @@ const Balance = () => {
             from: startDate,
             to: endDate,
             client: clientValue.value,
-            limit: 10,
+            limit: 300,
             page: currentPage + 1
         }
         dispatch(getUsersBalance(body))
@@ -151,7 +151,7 @@ const Balance = () => {
                 )}
             </div>
             <Pagination
-                countPage={10}
+                countPage={300}
                 totalDatas={totalCount}
                 currentPage={currentPage}
                 setCurrentPage={handleChangeCurrentPage}

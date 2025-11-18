@@ -85,6 +85,20 @@ export const ClientTableRow = ({
                             {currencyType}
                         </td>
                         <td className='text-left td'>
+                            {currencyType === 'USD'
+                                ? (client?.saleconnector?.totaldebtusd &&
+                                    roundUsd(
+                                        client?.saleconnector?.totaldebtusd
+                                    )?.toLocaleString('ru-RU')) ||
+                                0
+                                : (client?.saleconnector?.totaldebtuzs &&
+                                    roundUzs(
+                                        client?.saleconnector?.totaldebtuzs
+                                    )?.toLocaleString('ru-RU')) ||
+                                0}{' '}
+                            {currencyType}
+                        </td>
+                        <td className='text-left td'>
                             {client?.debtLimit?.toLocaleString('ru-RU')}{' '} {currencyType}
                         </td>
                         <td className='border-r-0 td py-[0.375rem]'>
@@ -266,6 +280,26 @@ export const ClientTableRow = ({
                 )}
                 <td className='text-left td font-bold'>
                     {[...data].reduce((prev, el) => prev + (el.balance || 0), 0)?.toLocaleString('ru-RU')} {currencyType}
+                </td>
+                <td className=' td py-[0.375rem] font-bold'>
+                    {currencyType === 'USD'
+                        ? roundUsd(
+                            [...data].reduce(
+                                (prev, el) =>
+                                    prev +
+                                    (el.saleconnector?.totaldebtusd || 0),
+                                0
+                            )
+                        )?.toLocaleString('ru-RU')
+                        : roundUzs(
+                            [...data].reduce(
+                                (prev, el) =>
+                                    prev +
+                                    (el.saleconnector?.totaldebtuzs || 0),
+                                0
+                            )
+                        )?.toLocaleString('ru-RU')}{' '}
+                    {currencyType}
                 </td>
                 <td className='text-left td font-bold'>
                     {[...data].reduce(

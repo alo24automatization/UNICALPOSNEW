@@ -121,7 +121,7 @@ function Products() {
     const [tableRowId, setTableRowId] = useState('')
     const [modalOpen, setModalOpen] = useState(false)
     const [filterModal, setFilterModal] = useState(false)
-    const [productWidth, setProductWidth] = useState('')
+    // const [productWidth, setProductWidth] = useState('')
     const [productHeight, setProductHeight] = useState('')
     // modal toggle
     const toggleModal = () => setModalVisible(!modalVisible)
@@ -576,7 +576,7 @@ function Products() {
                         tradeprice: tradePrice,
                         tradepriceuzs: tradePriceUzs,
                         minimumcount: minimumCount,
-                        width: productWidth === '' ? 0 : productWidth,
+                        // width: productWidth === '' ? 0 : productWidth,
                         height: productHeight === '' ? 0 : productHeight,
                         metrOfProduct: metrOfProduct || 0,
                         totalMetrOfProduct: totalMetrOfProduct || 0,
@@ -626,7 +626,7 @@ function Products() {
         setStickyForm(false)
         setSellingPriceOfProcient('')
         setTradePriceProcient('')
-        setProductWidth('')
+        // setProductWidth('')
         setProductHeight('')
         setMetrOfProduct('')
         setMetrPriceOfProduct('')
@@ -694,7 +694,7 @@ function Products() {
                     tradeprice: tradePrice,
                     tradepriceuzs: tradePriceUzs,
                     minimumcount: minimumCount,
-                    width: productWidth === '' ? 0 : productWidth,
+                    // width: productWidth === '' ? 0 : productWidth,
                     height: productHeight === '' ? 0 : productHeight,
                     metrOfProduct: metrOfProduct || 0,
                     totalMetrOfProduct: totalMetrOfProduct || 0,
@@ -924,9 +924,9 @@ function Products() {
             )
         }
     }
-    const handleChangeProductWidth = ({target}) => {
-        setProductWidth(target.value)
-    }
+    // const handleChangeProductWidth = ({target}) => {
+    //     setProductWidth(target.value)
+    // }
     const handleChangeProductHeight = ({target}) => {
         console.log(target.value)
         setProductHeight(target.value)
@@ -1033,7 +1033,7 @@ function Products() {
                 total,
                 category,
                 minimumcount,
-                width,
+                // width,
                 height,
                 metrOfProduct,
                 totalMetrOfProduct,
@@ -1056,7 +1056,7 @@ function Products() {
 
             setCodeOfProduct(code)
             setNameOfProduct(name)
-            setProductWidth(width)
+            // setProductWidth(width)
             setProductHeight(height)
             setNumberOfProduct(total)
             setUnitOfProduct({
@@ -1177,8 +1177,8 @@ function Products() {
             {/* Form */}
             {!isMobile ? (
                 <CreateProductForm
-                    productWidth={productWidth}
-                    handleChangeProductWidth={handleChangeProductWidth}
+                    // productWidth={productWidth}
+                    // handleChangeProductWidth={handleChangeProductWidth}
                     nameOfProduct={nameOfProduct}
                     unitOfProduct={unitOfProduct}
                     metrOfProduct={metrOfProduct}
@@ -1253,12 +1253,12 @@ function Products() {
                             categoryOfProduct={categoryOfProduct}
                             codeOfProduct={codeOfProduct}
                             checkOfProduct={checkOfProduct}
-                            productWidth={productWidth}
+                            // productWidth={productWidth}
                             productHeight={productHeight}
                             handleChangeProductHeight={
                                 handleChangeProductHeight
                             }
-                            handleChangeProductWidth={handleChangeProductWidth}
+                            // handleChangeProductWidth={handleChangeProductWidth}
                             tradePriceProcient={tradePriceProcient}
                             handleChangeTradePriceProcient={
                                 handleChangeTradePriceProcient
