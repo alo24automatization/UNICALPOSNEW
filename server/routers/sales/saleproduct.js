@@ -428,7 +428,7 @@ module.exports.register = async (req, res) => {
         })
         .populate(
           'payment',
-          'payment paymentuzs cash cashuzs card carduzs transfer transferuzs totalprice totalpriceuzs',
+          'payment paymentuzs cash cashuzs card carduzs transfer transferuzs totalprice totalpriceuzs useBalance',
         )
         .populate('discount', 'discount discountuzs')
         .populate('debt', 'debt debtuzs pay_end_date')
