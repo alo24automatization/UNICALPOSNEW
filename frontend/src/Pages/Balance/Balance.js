@@ -43,10 +43,17 @@ const Balance = () => {
         { title: t('Sana') }
     ]
 
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
     // states
+
     const [data, setData] = useState(usersBalance)
-    const [startDate, setStartDate] = useState(new Date().toISOString())
-    const [endDate, setEndDate] = useState(new Date().toISOString())
+    const [startDate, setStartDate] = useState(startOfDay.toISOString());
+    const [endDate, setEndDate] = useState(endOfDay.toISOString());
     const [clientValue, setClientValue] = useState('');
     const [optionClient, setOptionClient] = useState([]);
     const [currentPage, setCurrentPage] = useState(0)
