@@ -41,18 +41,18 @@ export const ProductTableRow = ({
                         {product.total.toLocaleString('ru-RU')}{' '}
                         {product.unit && product.unit.name}
                     </td>
-                    <td className='text-right td'>
+                    {/* <td className='text-right td'>
                         {product?.metrOfProduct}{' '}
-                    </td>
-                    <td className='text-right td'>
+                    </td> */}
+                    {/* <td className='text-right td'>
                         {product?.totalMetrOfProduct}{' '}
-                    </td>
-                    <td className='text-right td'>
+                    </td> */}
+                    {/* <td className='text-right td'>
                         {product?.metrPriceOfProduct}{' '}{currencyType}
-                    </td>
-                    <td className='text-right td'>
+                    </td> */}
+                    {/* <td className='text-right td'>
                         {product?.metrIncPriceOfProduct}{' '}{currencyType}
-                    </td>
+                    </td> */}
                     <td className='text-right td'>
                         {product.price &&
                             (currency === 'UZS'

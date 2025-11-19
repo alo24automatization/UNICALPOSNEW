@@ -13,7 +13,7 @@ function CreateProductForm({
                                numberOfProduct,
                                totalMetrOfProduct,
                                handleChangeNumberOfProduct,
-                               handleMetrOfProduct,
+                            //    handleMetrOfProduct,
                                metrPriceOfProduct,
                                handleMetrPriceOfProduct,
                                unitOfProduct,
@@ -113,16 +113,16 @@ function CreateProductForm({
                         />
                     </>
                 )}
-                <>
+                {/* <> */}
                     {/* -- maxsulotlar soni -- */}
-                    <FieldContainer
+                    {/* <FieldContainer
                         value={metrOfProduct}
                         onChange={handleMetrOfProduct}
                         label={t('Metr')}
                         placeholder={`${t('misol')}: 100`}
                         type={'text'}
-                    />
-                </>
+                    /> */}
+                {/* </> */}
                 {/* <> */}
                     {/* -- maxsulotlar soni -- */}
                     {/* <FieldContainer
