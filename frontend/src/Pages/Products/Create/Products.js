@@ -80,7 +80,7 @@ function Products() {
     const [metrOfProduct, setMetrOfProduct] = useState('')
     const [totalMetrOfProduct, setTotalMetrOfProduct] = useState('')
     const [metrPriceOfProduct, setMetrPriceOfProduct] = useState('')
-    const [metrIncPriceOfProduct, setMetrIncPriceOfProduct] = useState('')
+    // const [metrIncPriceOfProduct, setMetrIncPriceOfProduct] = useState('')
     const [numberOfProduct, setNumberOfProduct] = useState('')
     const [unitOfProduct, setUnitOfProduct] = useState('')
     const [priceOfProduct, setPriceOfProduct] = useState('')
@@ -143,22 +143,22 @@ function Products() {
             title: t('Soni'),
             filter: 'total',
         },
-        {
-            title: t('Metr'),
-            filter: 'metrOfProduct',
-        },
-        {
-            title: t('Jami metrda'),
-            filter: 'totalMetrOfProduct',
-        },
-        {
-            title: t('Sotish metrda'),
-            filter: 'metrPriceOfProduct',
-        },
-        {
-            title: t('Kelish metrda'),
-            filter: 'metrIncPriceOfProduct',
-        },
+        // {
+        //     title: t('Metr'),
+        //     filter: 'metrOfProduct',
+        // },
+        // {
+        //     title: t('Jami metrda'),
+        //     filter: 'totalMetrOfProduct',
+        // },
+        // {
+        //     title: t('Sotish metrda'),
+        //     filter: 'metrPriceOfProduct',
+        // },
+        // {
+        //     title: t('Kelish metrda'),
+        //     filter: 'metrIncPriceOfProduct',
+        // },
         {
             title: t('Olish'),
             filter:
@@ -249,19 +249,19 @@ function Products() {
         }
     }
 
-    const handleMetrOfProduct = (e) => {
-        let val = Number(e.target.value)
-        if (regexForTypeNumber.test(val)) {
-            setMetrOfProduct(val)
-            setTotalMetrOfProduct(val * numberOfProduct)
-            // if (val === 0) {
-            //     setMetrIncPriceOfProduct(0)
-            // }
-            if (priceOfProduct) {
-                setMetrIncPriceOfProduct(roundUzs(priceOfProduct / val))
-            }
-        }
-    }
+    // const handleMetrOfProduct = (e) => {
+    //     let val = Number(e.target.value)
+    //     if (regexForTypeNumber.test(val)) {
+    //         setMetrOfProduct(val)
+    //         setTotalMetrOfProduct(val * numberOfProduct)
+    //         // if (val === 0) {
+    //         //     setMetrIncPriceOfProduct(0)
+    //         // }
+    //         if (priceOfProduct) {
+    //             setMetrIncPriceOfProduct(roundUzs(priceOfProduct / val))
+    //         }
+    //     }
+    // }
 
     const handleMetrPriceOfProduct = (e) => {
         let val = e.target.value
@@ -303,11 +303,11 @@ function Products() {
                     Number(val),
                     Number(sellingPriceOfProcient),
                 )
-                if (metrOfProduct) {
-                    setMetrIncPriceOfProduct(
-                        roundUzs(Number(val) / metrOfProduct),
-                    )
-                }
+                // if (metrOfProduct) {
+                //     setMetrIncPriceOfProduct(
+                //         roundUzs(Number(val) / metrOfProduct),
+                //     )
+                // }
             } else {
                 setPriceOfProductsUsd(val)
                 setPriceOfProduct(UsdToUzs(val, currency))
@@ -581,7 +581,7 @@ function Products() {
                         metrOfProduct: metrOfProduct || 0,
                         totalMetrOfProduct: totalMetrOfProduct || 0,
                         metrPriceOfProduct: metrPriceOfProduct || 0,
-                        metrIncPriceOfProduct: metrIncPriceOfProduct || 0,
+                        // metrIncPriceOfProduct: metrIncPriceOfProduct || 0,
                     },
                 }
                 dispatch(addProduct(body)).then(({error}) => {
@@ -631,7 +631,7 @@ function Products() {
         setMetrOfProduct('')
         setMetrPriceOfProduct('')
         setTotalMetrOfProduct('')
-        setMetrIncPriceOfProduct('')
+        // setMetrIncPriceOfProduct('')
     }
     const handleEdit = (e) => {
         e.preventDefault()
@@ -699,7 +699,7 @@ function Products() {
                     metrOfProduct: metrOfProduct || 0,
                     totalMetrOfProduct: totalMetrOfProduct || 0,
                     metrPriceOfProduct: metrPriceOfProduct || 0,
-                    metrIncPriceOfProduct: metrIncPriceOfProduct || 0,
+                    // metrIncPriceOfProduct: metrIncPriceOfProduct || 0,
                 },
                 currentPage,
                 countPage: showByTotal,
@@ -1038,7 +1038,7 @@ function Products() {
                 metrOfProduct,
                 totalMetrOfProduct,
                 metrPriceOfProduct,
-                metrIncPriceOfProduct,
+                // metrIncPriceOfProduct,
                 price: {
                     sellingprice,
                     incomingprice,
@@ -1052,7 +1052,7 @@ function Products() {
             setMetrOfProduct(metrOfProduct)
             setTotalMetrOfProduct(totalMetrOfProduct)
             setMetrPriceOfProduct(metrPriceOfProduct)
-            setMetrIncPriceOfProduct(metrIncPriceOfProduct)
+            // setMetrIncPriceOfProduct(metrIncPriceOfProduct)
 
             setCodeOfProduct(code)
             setNameOfProduct(name)
@@ -1183,7 +1183,7 @@ function Products() {
                     unitOfProduct={unitOfProduct}
                     metrOfProduct={metrOfProduct}
                     metrPriceOfProduct={metrPriceOfProduct}
-                    metrIncPriceOfProduct={metrIncPriceOfProduct}
+                    // metrIncPriceOfProduct={metrIncPriceOfProduct}
                     totalMetrOfProduct={totalMetrOfProduct}
                     categoryOfProduct={categoryOfProduct}
                     codeOfProduct={codeOfProduct}
@@ -1216,7 +1216,7 @@ function Products() {
                     }
                     handleChangePriceOfProduct={handleChangePriceOfProduct}
                     handleChangeNumberOfProduct={handleChangeNumberOfProduct}
-                    handleMetrOfProduct={handleMetrOfProduct}
+                    // handleMetrOfProduct={handleMetrOfProduct}
                     stickyForm={stickyForm}
                     clearForm={clearForm}
                     handleEdit={handleEdit}

@@ -15,6 +15,7 @@ import {
     successAddClientMessage,
     successDeleteClientMessage,
     successUpdateClientMessage,
+    universalToast,
     warningEmptyInput,
 } from '../../Components/ToastMessages/ToastMessages.js'
 import {
@@ -26,12 +27,13 @@ import {
     getClientsByFilter,
     updateClients,
 } from './clientsSlice'
-import { checkEmptyString } from '../../App/globalFunctions.js'
+import { checkEmptyString, exportExcel, roundUsd, roundUzs } from '../../App/globalFunctions.js'
 import { useTranslation } from 'react-i18next'
 import { VscChromeClose } from 'react-icons/vsc'
 import { FaFilter } from 'react-icons/fa'
 import SelectForm from '../../Components/Select/SelectForm.js'
 import BalanceModal from '../../Components/BalanceModal/BalanceModal.js'
+import ExportBtn from '../../Components/Buttons/ExportBtn.js'
 
 const ClientsPage = () => {
     const { t } = useTranslation(['common'])
@@ -41,6 +43,7 @@ const ClientsPage = () => {
         useSelector((state) => state.clients)
 
     const { user } = useSelector((state) => state.login)
+    const { currencyType } = useSelector((state) => state.currency)
 
     const headers =
         user.type === 'Director'
@@ -267,7 +270,7 @@ const ClientsPage = () => {
         let val = e.target.value
         let valForSearch = val.toLowerCase().replace(/\s+/g, ' ').trim()
         setSearchByName(val)
-        if (searchedData.length > 0 || totalSearched > 0)
+        if (searchedData?.length > 0 || totalSearched > 0)
             dispatch(clearSearchedClients())
         if (valForSearch === '') {
             setData(clients)
@@ -277,14 +280,14 @@ const ClientsPage = () => {
                 return client.name.toLowerCase().includes(valForSearch)
             })
             setData(filteredClients)
-            setFilteredDataTotal(filteredClients.length)
+            setFilteredDataTotal(filteredClients?.length)
         }
     }
     const filterByClientPhoneNumber = (e) => {
         let val = e.target.value
         let valForSearch = val.toLowerCase().replace(/\s+/g, ' ').trim()
         setSearchPhoneNumber(val)
-        if (searchedData.length > 0 || totalSearched > 0)
+        if (searchedData?.length > 0 || totalSearched > 0)
             dispatch(clearSearchedClients())
         if (valForSearch === '') {
             setData(clients)
@@ -294,7 +297,7 @@ const ClientsPage = () => {
                 return client.phoneNumber.toLowerCase().includes(valForSearch)
             })
             setData(filteredClients)
-            setFilteredDataTotal(filteredClients.length)
+            setFilteredDataTotal(filteredClients?.length)
         }
     }
 
@@ -338,6 +341,70 @@ const ClientsPage = () => {
 
     const closeModalBalanceHandler = () => {
         setIsOpenBalanceModal(false)
+    }
+
+    const excelData = () => {
+        let fileName = 'Mijozlar'
+        const exportHeader = [
+            '№', 
+            'Agent', 
+            'Mijoz',
+            'Telefon',
+            'Savdo', 
+            'Sof foyda', 
+            'Balans',
+            'Qarz',
+            'Qarz limit',
+        ]
+        if (data?.length > 0) {
+            const clientsData = map(data, (item, index) => ({
+                nth: index + 1,
+                agent: item?.packman?.name || '',
+                name: item?.name || '',
+                phone: item?.phoneNumber || '',
+                total:  currencyType === 'USD'
+                    ? (item?.saleconnector?.totalsales &&
+                        roundUsd(
+                            item?.saleconnector?.totalsales
+                        )?.toLocaleString('ru-RU')) ||
+                    0
+                    : (item?.saleconnector?.totalsalesuzs &&
+                        roundUzs(
+                            item?.saleconnector?.totalsalesuzs
+                        )?.toLocaleString('ru-RU')) ||
+                    0
+                ,
+                profit: currencyType === 'USD'
+                    ? (item?.saleconnector?.profit &&
+                        roundUsd(
+                            item?.saleconnector?.profit
+                        )?.toLocaleString('ru-RU')) ||
+                    0
+                    : (item?.saleconnector?.profituzs &&
+                        roundUzs(
+                            item?.saleconnector?.profituzs
+                        )?.toLocaleString('ru-RU')) ||
+                    0
+                ,
+                balance: item?.balance?.toLocaleString('ru-RU'),
+                debt: currencyType === 'USD'
+                    ? (item?.saleconnector?.totaldebtusd &&
+                        roundUsd(
+                            item?.saleconnector?.totaldebtusd
+                        )?.toLocaleString('ru-RU')) ||
+                    0
+                    : (item?.saleconnector?.totaldebtuzs &&
+                        roundUzs(
+                            item?.saleconnector?.totaldebtuzs
+                        )?.toLocaleString('ru-RU')) ||
+                    0
+                ,
+                debtLimit: item?.debtLimit?.toLocaleString('ru-RU'),
+            }))
+            exportExcel(clientsData, fileName, exportHeader)
+        } else {
+            universalToast('Jadvalda ma\'lumot mavjud emas !', 'warning')
+        }
     }
 
     useEffect(() => {
@@ -509,6 +576,9 @@ const ClientsPage = () => {
                             ...packmanOptions,
                         ]}
                     />
+                    <ExportBtn
+                        onClick={excelData}
+                    />
                 </div>
             ) : (
                 modalOpen && (
@@ -566,11 +636,11 @@ const ClientsPage = () => {
             <div className='lg:tableContainerPadding'>
                 {loading ? (
                     <Spinner />
-                ) : data.length === 0 && searchedData.length === 0 ? (
+                ) : data?.length === 0 && searchedData?.length === 0 ? (
                     <NotFind text={t('Mijozlar mavjud emas')} />
                 ) : !isMobile ? (
                     <Table
-                        data={searchedData.length > 0 ? searchedData : data}
+                        data={searchedData?.length > 0 ? searchedData : data}
                         page={'client'}
                         currentPage={currentPage}
                         countPage={showByTotal}
@@ -583,7 +653,7 @@ const ClientsPage = () => {
                     />
                 ) : (
                     <TableMobile
-                        data={searchedData.length > 0 ? searchedData : data}
+                        data={searchedData?.length > 0 ? searchedData : data}
                         page={'client'}
                         currentPage={currentPage}
                         countPage={showByTotal}
